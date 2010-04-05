@@ -1,0 +1,326 @@
+html,body
+{
+  overflow:hidden;
+  width:100%;
+  height:100%;
+  padding:0px;
+  margin:0px;
+}
+#wrap
+{
+  overflow:hidden;
+  width:100%;
+  height:100%;
+  position:relative;
+}
+
+body
+{
+  background: black;
+}
+
+#ship
+{
+  position:absolute;
+  bottom:0px;
+  left:100px;
+  background: url(../i/ship_idle.gif) 0px 0px;
+  width:40px;
+  height:40px;
+}
+#ship.a
+{
+  background: url(../i/ship_a_idle.gif) 0px 0px;
+}
+#ship.fire
+{
+  background: url(../i/ship_fire.gif) 0px 0px;
+}
+#ship.a.fire
+{
+  background: url(../i/ship_a_fire.gif) 0px 0px;
+}
+#ship.explode
+{
+  background: url(../i/ship_explode.gif) 0px 0px;
+}
+
+#bonuses .p
+{
+  background: url(../i/p.gif) 0px 0px;
+  width:40px;
+  height:40px;
+  position:absolute;
+}
+#bonuses .new_life
+{
+  background: url(../i/new_life.gif) 0px 0px;
+  width:40px;
+  height:40px;
+  position:absolute;
+}
+
+#bullets div
+{
+  position:absolute;
+  background: url(../i/bullet.gif) 0px 0px;
+  width:6px;
+  height:6px;
+}
+
+#flowers-pulse div
+{
+  background: url(../i/flowers_fly.gif) 0px 120px;
+  width:40px;
+  height:40px;
+  position: absolute;
+}
+#flowers-fall div
+{
+  background: url(../i/flowers_fly.gif) 0px 80px;
+  width:40px;
+  height:40px;
+  position: absolute;
+}
+#flowers-queue div
+{
+  background: url(../i/flowers_fly.gif) 0px 40px;
+  width:40px;
+  height:40px;
+  position: absolute;
+}
+#flowers-swing div
+{
+  background: url(../i/flowers_fly.gif) 0px 160px;
+  width:40px;
+  height:40px;
+  position: absolute;
+}
+#flowers-meteorite div
+{
+  background: url(../i/flowers_fly.gif) 0px 0px;
+  width:40px;
+  height:40px;
+  position: absolute;
+}
+
+
+#petals .pulse
+{
+  background: url(../i/flowers_explode.gif) 0px 120px;
+  position: absolute;
+  width:40px;
+  height:40px;
+}
+#petals .fall
+{
+  background: url(../i/flowers_explode.gif) 0px 80px;
+  position: absolute;
+  width:40px;
+  height:40px;
+}
+#petals .queue
+{
+  background: url(../i/flowers_explode.gif) 0px 40px;
+  position: absolute;
+  width:40px;
+  height:40px;
+}
+#petals .swing
+{
+  background: url(../i/flowers_explode.gif) 0px 160px;
+  position: absolute;
+  width:40px;
+  height:40px;
+}
+#petals .meteorite
+{
+  background: url(../i/flowers_explode.gif) 0px 0px;
+  position: absolute;
+  width:40px;
+  height:40px;
+}
+
+#fps
+{
+  position: absolute;
+  left: 5px;
+  top: 5px;
+  color: white;
+  font-size:12pt;
+  font-weight:bold;
+  width:80px;
+  text-align:right;
+}
+#score
+{
+  position: absolute;
+  left: 90px;
+  top: 5px;
+  color: white;
+  font-size:12pt;
+  font-weight:bold;
+  width:80px;
+  text-align:right;
+}
+#lifeCount
+{
+  position: absolute;
+  left: 170px;
+  top: 5px;
+  color: white;
+  font-size:12pt;
+  font-weight:bold;
+  width:80px;
+  text-align:right;
+}
+
+#grass-tl
+{
+  position:absolute;
+  left:0px;
+  top:0px;
+  width:80px;
+  height:100%;
+  background:url(../i/grass_tl.gif) 0px 0px repeat-y;
+}
+#grass-tr
+{
+  position:absolute;
+  right:0px;
+  top:0px;
+  width:80px;
+  height:100%;
+  background:url(../i/grass_tr.gif) 0px 0px repeat-y;
+}
+#grass-bl
+{
+  position:absolute;
+  left:20px;
+  top:0px;
+  width:80px;
+  height:100%;
+  background:url(../i/grass_bl.gif) 0px 0px repeat-y;
+}
+#grass-br
+{
+  position:absolute;
+  right:20px;
+  top:0px;
+  width:80px;
+  height:100%;
+  background:url(../i/grass_br.gif) 0px 0px repeat-y;
+}
+
+#menu
+{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:400px;
+  margin-left: -200px;
+  height:400px;
+  margin-top: -200px;
+  color:white;
+  font-size:10pt;
+  border:2px white solid;
+  -webkit-border-radius:10px;
+  -moz-border-radius:10px;
+  border-radius:10px;
+  background: transparent url(../i/non_rgba_back_menu_back.png) repeat; /* fallback for non rgba browsers */
+  background: rgba(0, 0, 255, 0.5) none;
+}
+#menu h1
+{
+  text-align:center;
+  font-size:200%;
+}
+#menu h2
+{
+  text-align:center;
+  font-size:150%;
+}
+#menu h3
+{
+  text-align:center;
+  font-size:125%;
+}
+
+#menu p
+{
+  margin:0px;
+}
+#menu a
+{
+  color:red;
+}
+#menu > ul
+{
+  padding:0px;
+  list-style-type:none;
+}
+#menu > ul > li
+{
+  margin-left:0px;
+  text-align:center;
+}
+#menu .new_game
+{
+  text-align:center;
+}
+#menu .new_game button
+{
+  margin:1px;
+  background:white;
+  color:black;
+  -webkit-border-radius:2px;
+  -moz-border-radius:2px;
+  border-radius:2px;
+  border:0px transparent solid;
+}
+
+ul.tabs
+{
+  list-style-type: none;
+  display: block;
+  position:relative;
+  height: 6.5em;
+  padding:0px;
+  margin:0px;
+}
+ul.tabs > li
+{
+  display:inline !important;
+  display:inline-block;
+  zoom:1;
+}
+ul.tabs > li > div
+{
+  display:none;
+  position:absolute;
+  top:1.8em;
+  left:0px;
+  width:100%;
+  text-align:center;
+}
+ul.tabs > li > h3
+{
+  border: 1px transparent solid;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  padding:1px;
+  display:inline !important;
+  display:inline-block;
+  zoom:1;
+  margin:0px;
+  width:80px;
+}
+ul.tabs > li.active > h3
+{
+  border-color: white;
+}
+ul.tabs > li.active > div
+{
+  display: block;
+}

@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<!--
+/**
+  @file
+  @author  Fyodorov "bga" Alexander <bga.email@gmail.com>
+ 
+  @section LICENSE
+ 
+  Copyright (c) 2009-2010, Fyodorov "Bga" Alexander <bga.email@gmail.com>
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+      * Redistributions of source code must retain the above copyright
+        notice, this list of conditions and the following disclaimer.
+      * Redistributions in binary form must reproduce the above copyright
+        notice, this list of conditions and the following disclaimer in the
+        documentation and/or other materials provided with the distribution.
+      * The name of the developer may not be used to endorse or promote
+        products derived from this software without specific prior
+        written permission.
+
+  THIS SOFTWARE IS PROVIDED BY FYODOROV "BGA" ALEXANDER "AS IS" AND ANY EXPRESS OR
+  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+  IN NO EVENT SHALL FYODOROV "BGA" ALEXANDER BE LIABLE FOR ANY DIRECT, INDIRECT,
+  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+-->
+<html>
+<head>
+  <title>$jb.nav test</title>
+
+  <meta content="text/html; charset=utf-8" http-equiv="content-type">
+  <meta name="keywords" content="jbasis, ria, javascript, framework, demo, test, nav, navigator, user agent, browser, detection, flash, traits">
+  <meta name="description" content="jbasis nav(user agent traits detection) demo">
+
+  <script type="text/javascript" src="difMap.js"></script>
+  <script type="text/javascript" src="main.js"></script>
+  <link rel="stylesheet" href="css/layout.css">
+</head>
+
+<body>
+
+<div id="wrap">
+  <div id="grass-bl"></div>
+  <div id="grass-br"></div>
+
+  <div id="bonuses"></div>
+  
+  <div id="flowers-pulse"></div>
+  <div id="flowers-fall"></div>
+  <div id="flowers-queue"></div>
+  <div id="flowers-swing"></div>
+  <div id="flowers-meteorite"></div>
+
+  <div id="bullets"></div>
+
+  <div id="ship" style="bottom:0px;"></div>
+
+  <div id="petals"></div>
+
+  <div id="grass-tl"></div>
+  <div id="grass-tr"></div>
+
+  <div id="fps">a<span> fps</span></div>
+  <div id="score">a<span> pts</span></div>
+  <div id="lifeCount">a<span> lifes</span></div>
+  
+  <div id="menu">
+    <h1 id="menu-title">Flowers-game.js</h1>
+    <ul>
+      <li class="new_game">
+        <h2>New Game</h2>
+        <button onclick="return $G._newGame('easy');">easy</button> 
+        <button onclick="return $G._newGame('normal');">normal</button> 
+        <button onclick="return $G._newGame('hard');">hard</button> 
+        <button onclick="return $G._newGame('insane');">insane</button>
+      </li>
+      <li class="opts">
+        <h2>Controlling</h2>
+        <ul class="tabs">
+          <li class="kbd active" controller="$G.Controller.Kbd">
+            <h3 onclick="return $G._setController.call(this);">Keyboard</h3>
+            <div>
+              <p>left - left</p>
+              <p>right - right</p>
+              <p>shift or space - shoot</p>
+              <p>esc - toggle pause/menu</p>
+            </div>
+          </li>
+          <li class="mouse" controller="$G.Controller.Mouse">
+            <h3 onclick="return $G._setController.call(this);">Mouse</h3>
+            <div>
+              <p>mouse left - left</p>
+              <p>mouse right - right</p>
+              <p>left click - shoot</p>
+              <p>right click - toggle pause/menu</p>
+            </div>
+          </li>
+        </ul>  
+      </li>
+      <li>
+        <h2>Credits</h2>
+        <p>gfx/music/original idea owned by <a href="http://www.gamedesign.jp/">gamedesign</a></p>
+        <p>js port, gameplay improvement by <a href="https://twitter.com/bga_">bga</a></p>
+        <p><a href="#">source code(github, new BSD license)</a></p>
+      </li>
+    </ul>
+  </div>
+
+</div>
+<!--
+<script type="text/javascript">
+  var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js'   type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+  try
+  { 
+    var pageTracker = _gat._getTracker("UA-8343940-1");
+    pageTracker._trackPageview();
+  }
+  catch(err)
+  {
+  }
+</script>
+-->
+</body>
+</html>
