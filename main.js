@@ -197,6 +197,8 @@ $G.Ship.prototype._kill = function()
   if(this.restoreSpriteClassThreadId_ != null)
     clearTimeout(this.restoreSpriteClassThreadId_);
 
+  this.aModeElTime = 0;
+  this.baseSpriteClass = '';
   this.sprite.className = this.baseSpriteClass + " explode";
   
   this._render = this._moveLeft = this._moveRight = this._fireBullet = this._setAMode = this._addLife = $G._null;
