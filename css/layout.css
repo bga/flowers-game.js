@@ -44,17 +44,36 @@ body
 {
   background: url(../i/ship_explode.gif) 0px 0px;
 }
+#ship #ship-saw
+{
+  position:relative;
+
+  left:-11px;
+  top:-11px;
+
+  width:62px;
+  height:62px;
+  
+  background: url(../i/saw.gif) 0px 0px;
+}
 
 #bonuses .p
 {
-  background: url(../i/p.gif) 0px 0px;
+  background: url(../i/bonus_p.gif) 0px 0px;
   width:40px;
   height:40px;
   position:absolute;
 }
 #bonuses .new_life
 {
-  background: url(../i/new_life.gif) 0px 0px;
+  background: url(../i/bonus_new_life.gif) 0px 0px;
+  width:40px;
+  height:40px;
+  position:absolute;
+}
+#bonuses .saw
+{
+  background: url(../i/bonus_saw.gif) 0px 0px;
   width:40px;
   height:40px;
   position:absolute;
