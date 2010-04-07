@@ -2,29 +2,35 @@ var difMap=
 {
   'easy':
   {
+    'ship':
+    {
+      maxAModeTime: 10*33,
+      maxSawTime: 10*33,
+      maxSawFlowersCount: 20
+    },
     'bonuses':
     {
-      bonusChanse: 0.05
+      bonusChanse: 1/100
     },
     'flowers-pulse':
     {
       minCreateInterval: 2*33,
-      dMinCreateInterval: -0.1,
-      mMinCreateInterval: 10,
+      dMinCreateInterval: -1/60,
+      mMinCreateInterval: 0.5*33,
 
       maxCreateInterval: 33*4,
-      dMaxCreateInterval: -0.1,
-      mMaxCreateInterval: 33*2
+      dMaxCreateInterval: -1/30,
+      mMaxCreateInterval: 33
     },
     'flowers-fall':
     {
       minCreateInterval: 2*33,
-      dMinCreateInterval: -0.1,
-      mMinCreateInterval: 10,
+      dMinCreateInterval: -1/60,
+      mMinCreateInterval: 0.5*33,
 
       maxCreateInterval: 33*4,
-      dMaxCreateInterval: -0.1,
-      mMaxCreateInterval: 33*2
+      dMaxCreateInterval: -1/30,
+      mMaxCreateInterval: 33
     },
     'flowers-swing':
     {
@@ -67,6 +73,12 @@ var difMap=
   },
   'normal':
   {
+    'ship':
+    {
+      maxAModeTime: 10*33,
+      maxSawTime: 10*33,
+      maxSawFlowersCount: 20
+    },
     'bonuses':
     {
       bonusChanse: 0.001
@@ -132,6 +144,12 @@ var difMap=
   },
   'hard':
   {
+    'ship':
+    {
+      maxAModeTime: 10*33,
+      maxSawTime: 10*33,
+      maxSawFlowersCount: 20
+    },
     'bonuses':
     {
       bonusChanse: 0.001
@@ -197,6 +215,12 @@ var difMap=
   },
   'insane':
   {
+    'ship':
+    {
+      maxAModeTime: 10*33,
+      maxSawTime: 10*33,
+      maxSawFlowersCount: 20
+    },
     'bonuses':
     {
       bonusChanse: 0.001
