@@ -143,10 +143,20 @@ $G.Bullets.prototype._render=function()
 $G.Ship=function()
 {
   this.sprite = $d.getElementById("ship");
-
+  this.lifeCountEl = $d.getElementById("lifeCount").firstChild;
+  this.menuEl = $d.getElementById("menu");
+  this.menuTitleEl = $d.getElementById("menu-title").firstChild;
+  this.sawEl = $d.getElementById("ship-saw")
+  
   this.lifeCount;
   
+  this.maxAModeTime;
   this.aModeElTime;
+
+  this.maxSawTime;
+  this.maxSawFlowersCount
+  this.sawModeElTime;
+  this.sawModeFlowersElCount;
 
   this.baseSpriteClass;
   
@@ -157,80 +167,91 @@ $G.Ship=function()
   
   this._fireBullet;
   this._render;
-  this._setAMode;
-  this._addLife;
+  
+  this._aModeOn;
+  this._sawModeOn;
+  
+  this._moveLeft;
+  this._moveRight;
   
 
   this.restoreSpriteClassThreadId_ = null;
   
   var self = this;
   
-  this.__restoreSpriteClassBind = function(){ self.__restoreSpriteClass(); };
+  this.__restoreSpriteClassThreadBind = function(){ self.__restoreSpriteClassThread(); };
+};
+
+$G.Ship.prototype.__stopRestoreClassThread = function()
+{  
+  if(this.restoreSpriteClassThreadId_ != null)
+  {
+    clearInterval(this.restoreSpriteClassThreadId_);
+    this.restoreSpriteClassThreadId_ = null;
+  }
+};
+$G.Ship.prototype.__restoreSpriteClassThread = function()
+{
+  this.sprite.className = this.baseSpriteClass;
+  this.restoreSpriteClassThreadId_ = null;
 };
 
 $G.Ship.prototype._initGame = function(dif)
 {
-  $d.getElementById("menu").style.display = "none";
+  var d = dif['ship'];
+  
+  this.maxAModeTime = d.maxAModeTime;
+  this.maxSawFlowersCount = d.maxSawFlowersCount;
+  this.maxSawTime = d.maxSawTime;
+  
+  this.lifeCountEl.data = this.lifeCount = 3;
+  
+  this.__aModeOff();
+  this.__sawModeOff();
 
-  this.sprite.className = this.baseSpriteClass;
-  
-  this.lifeCount = 3;
-  $d.getElementById("lifeCount").firstChild.data = this.lifeCount;
-  
-  this.aModeElTime = 0;
+  this.sprite.className = this.baseSpriteClass = '';
 
-  this.baseSpriteClass = "";
-  
   this.y = $G.wHeight - 20;
   this.sprite.style.left = (this.x = 0.5*$G.wWidth) - 20 + 'px';
   
-  this.isPause = false;
-  this.sprite.style.bottom = '-40px';
-  this._render = this.__renderWakeUp;
-  this._togglePause = this.__togglePause;
-  this._moveLeft = this._moveRight = this._fireBullet = this._setAMode = this._addLife = $G._null;
+  this.__pauseModeOff();
+  this._enablePause();
 };
 
 $G.Ship.prototype._kill = function()
 {
-  // stop animation
-  if(this.restoreSpriteClassThreadId_ != null)
-    clearTimeout(this.restoreSpriteClassThreadId_);
-
-  this.aModeElTime = 0;
+  this.__aModeOff();
+  this.__sawModeOff();
+  
+  this.__stopRestoreClassThread();
   this.baseSpriteClass = '';
   this.sprite.className = this.baseSpriteClass + " explode";
-  
-  this._render = this._moveLeft = this._moveRight = this._fireBullet = this._setAMode = this._addLife = $G._null;
+
+  this.__passiveModeOn();
+  this._render = $G._null;
 
   if(--this.lifeCount === -1)
   {
-    this._togglePause = $G._null;
+    this._disablePause();
     
     return $G._gameOver();
   }
   
-  $d.getElementById("lifeCount").firstChild.data = this.lifeCount;
+  this.lifeCountEl.data = this.lifeCount;
   
-  this.restoreSpriteClassThreadId_ = setTimeout(this.__restoreSpriteClassBind, 3000);
+  this.restoreSpriteClassThreadId_ = setTimeout(this.__restoreSpriteClassThreadBind, 3000);
 
   var self = this;
   
   setTimeout(
     function()
     {
-      self.aModeElTime = 0;
-      self.sprite.style.bottom = '-40px';
+      self.sprite.style.bottom = '-52px';
+      self.__sawModeOn();
       self._render = self.__renderWakeUp;
     },
     3000
   );
-};
-
-$G.Ship.prototype.__restoreSpriteClass = function()
-{
-  this.sprite.className = this.baseSpriteClass;
-  this.restoreSpriteClassThreadId_ = null
 };
 
 $G.Ship.prototype.__fireBullet = function()
@@ -238,11 +259,10 @@ $G.Ship.prototype.__fireBullet = function()
   // center
   bullets._createBullet(this.x, $G.wHeight - 40 - 6, 0, -20);
   
-  // run animation
   if(this.restoreSpriteClassThreadId_ == null)
   {
     this.sprite.className += " fire";
-    this.restoreSpriteClassThreadId_ = setTimeout(this.__restoreSpriteClassBind, 100);
+    this.restoreSpriteClassThreadId_ = setTimeout(this.__restoreSpriteClassThreadBind, 100);
   }
 };
 
@@ -257,56 +277,128 @@ $G.Ship.prototype.__fireBulletA = function()
   // right
   $G.bullets._createBullet(this.x + 3, $G.wHeight - 40 - 6, +8, -18);
   
-  // run animation
   if(this.restoreSpriteClassThreadId_ == null)
   {
     this.sprite.className += " fire";
-    this.restoreSpriteClassThreadId_ = setTimeout(this.__restoreSpriteClassBind, 100);
+    this.restoreSpriteClassThreadId_ = setTimeout(this.__restoreSpriteClassThreadBind, 100);
   }
 };
 
+$G.Ship.prototype.__pauseModeOn = function()
+{  
+  this.isPause = true;
+  this.menuTitleEl.data = $G.gameDifName + " :: Pause";
+  this.menuEl.style.display = "";
+  this._render = this.__renderSleep;
+  this.__passiveModeOn();
+};
+$G.Ship.prototype.__pauseModeOff = function()
+{  
+  this.isPause = false;
+  this.menuEl.style.display = 'none';
+  this.sprite.style.bottom = '-52px';
+  this._render = this.__renderWakeUp;
+};
 $G.Ship.prototype.__togglePause = function()
 {
   if(this.isPause = !this.isPause)
-  {
-    $d.getElementById("menu").style.display = "";
-    $d.getElementById("menu-title").firstChild.data = $G.gameDifName + " :: Pause";
-    this._render = this.__renderSleep;
-    this._moveLeft = this._moveRight = this._fireBullet = this._setAMode = this._addLife = $G._null;
-  }
+    this.__pauseModeOn();
   else
-  {
-    $d.getElementById("menu").style.display = "none";
-    this._render = this.__renderWakeUp;
-  }
+    this.__pauseModeOff();
+};
+$G.Ship.prototype._disablePause = function()
+{
+  this._togglePause = $G._null;
+};
+$G.Ship.prototype._enablePause = function()
+{
+  this._togglePause = this.__togglePause;
 };
 
-$G.Ship.prototype.__setAMode = function()
+$G.Ship.prototype.__passiveModeOn = function()
 {
-  this._fireBullet = this.__fireBulletA;
-  this.aModeElTime = 1000; // 30 sek
+  this._moveLeft = this._moveRight = this._fireBullet = this._sawModeOn = this._aModeOn = this._addLife = $G._null;
+};
+$G.Ship.prototype.__passiveModeOff = function()
+{
+  this._render = (this.sawModeFlowersElCount > 0) ? this.__renderSaw : this.__render;
+  this._fireBullet = (this.aModeElTime > 0) ? this.__fireBulletA : this.__fireBullet;
+  this._addLife = this.__addLife;
+  
+  this._sawModeOn = this.__sawModeOn;
+  this._aModeOn = this.__aModeOn;
+  
+  this._moveLeft = this.__moveLeft;
+  this._moveRight= this.__moveRight;
+};
 
+$G.Ship.prototype.__aModeOn = function()
+{
+  this.aModeElTime = this.maxAModeTime;
+
+  this._fireBullet = this.__fireBulletA;
+
+  this.__stopRestoreClassThread();
   this.sprite.className = this.baseSpriteClass = 'a';
-    
-  if(this.restoreSpriteClassThreadId_ != null)
-  {
-    clearInterval(this.restoreSpriteClassThreadId_);
-    this.restoreSpriteClassThreadId_ = null;
-  }
+};
+$G.Ship.prototype.__aModeOff = function()
+{
+  this.aModeElTime = 0;
+
+  this._fireBullet = this.__fireBullet;
+
+  this.__stopRestoreClassThread();
+  this.sprite.className = this.baseSpriteClass = '';
+};
+
+$G.Ship.prototype.__sawModeOn = function()
+{
+  this.sawModeElTime = this.maxSawTime;
+  this.sawModeFlowersElCount = this.maxSawFlowersCount;
+  this._render = this.__renderSaw;
+  
+  this.sawEl.style.display = '';
+};
+$G.Ship.prototype.__sawModeOff = function()
+{
+  this.sawModeFlowersElCount = this.sawModeElTime = 0;
+  this._render = this.__render;
+  this.sawEl.style.display = 'none';
 };
 
 $G.Ship.prototype.__addLife = function()
 {
-  $d.getElementById("lifeCount").firstChild.data = "" + (++this.lifeCount);
+  this.lifeCountEl.data = "" + (++this.lifeCount);
 };
- 
+
+$G.Ship.prototype.__moveLeft = function()
+{
+  var x = this.x - 15;
+  
+  if(x <= 20)
+    x = 20;
+  
+  if(this.x !== x)
+    this.sprite.style.left = (this.x = x)- 20 + 'px';
+};
+$G.Ship.prototype.__moveRight = function()
+{
+  var x = this.x + 15;
+  
+  if(x >= $G.wWidth - 20)
+    x = $G.wWidth - 20;
+  
+  if(this.x !== x)
+    this.sprite.style.left = (this.x = x)- 20 + 'px';
+};
+
 $G.Ship.prototype.__renderSleep=function()
 {
   var st = this.sprite.style, y = st.bottom.slice(0, -2) - 1;
   
-  if(y < -40)
+  if(y < -51)
   {
-    y = -40;
+    y = -51;
     this._render = $G._null;
   }
 
@@ -319,36 +411,10 @@ $G.Ship.prototype.__renderWakeUp = function()
   if(y > 0)
   {
     y = 0;
-    this._render = this.__render;
-    this._fireBullet = (this.aModeElTime > 0) ? this.__fireBulletA : this.__fireBullet;
-    this._addLife = this.__addLife;
-    this._setAMode = this.__setAMode;
-    this._moveLeft = this.__moveLeft;
-    this._moveRight= this.__moveRight;
+    this.__passiveModeOff();
   }
 
   st.bottom = y + 'px';
-};
-$G.Ship.prototype.__moveLeft = function()
-{
-  var x = this.x - 15;
-  
-  if(x <= 20)
-    x = 20;
-  
-  if(this.x !== x)
-    this.sprite.style.left = (this.x = x)- 20 + 'px';
-};
-
-$G.Ship.prototype.__moveRight = function()
-{
-  var x = this.x + 15;
-  
-  if(x >= $G.wWidth - 20)
-    x = $G.wWidth - 20;
-  
-  if(this.x !== x)
-    this.sprite.style.left = (this.x = x)- 20 + 'px';
 };
 $G.Ship.prototype.__render = function()
 {
@@ -372,17 +438,39 @@ $G.Ship.prototype.__render = function()
   }
   
   if(--this.aModeElTime === 0)
+    this.__aModeOff();
+};
+
+$G.Ship.prototype.__renderSaw = function()
+{
+  // collision detection
+  var fgs = $G.flowerGroups.groups, fgi = fgs.length, fg, fs, fi, temp, d, x = this.x, y = this.y;
+  
+  ship_cd: while(fgi--)
   {
-    this._fireBullet = this.__fireBullet;
-    this.sprite.className = this.baseSpriteClass = '';
+    fi = (fs = (fg = fgs[fgi]).sprites.childNodes).length;
     
-    if(this.afterFireThreadId != null)
+    while(fi--)
     {
-      clearInterval(this.afterFireThreadId);
-      this.afterFireThreadId = null;
+      if((temp = (d = fs[fi].d).x - x)*temp + (temp = d.y - y)*temp < 2601) // (20 + 20 + 11)**2
+      {
+        fg._killFlower(fs[fi]);
+        
+        if(--this.sawModeFlowersElCount === 0)
+          this.__sawModeOff();
+          
+        break ship_cd;
+      }
     }
   }
+
+  if(--this.sawModeElTime === 0)
+    this.__sawModeOff();
+  
+  if(--this.aModeElTime === 0)
+    this.__aModeOff();
 };
+
 
 $G.FlowerGroup={};
 
@@ -407,8 +495,14 @@ $G.Bonuses.prototype._createBonus = function(x, y)
     return;
     
   var b = $d.createElement('div'), st, d;
+  var r = Math.random();
   
-  b.className = (Math.random() < 0.5) ? 'p' : 'new_life';
+  if(r < 0.33)
+    b.className = 'p';
+  else if(r < 0.66)
+    b.className = 'new_life';
+  else
+    b.className = 'saw';
   
   d = b.d = new Object();
   
@@ -444,10 +538,13 @@ $G.Bonuses.prototype._render = function()
       switch(b.className)
       {
         case 'p':
-          $G.ship._setAMode();
+          $G.ship._aModeOn();
           break;
         case 'new_life':
           $G.ship._addLife();
+          break;
+        case 'saw':
+          $G.ship._sawModeOn();
           break;
       }
 
@@ -1065,7 +1162,7 @@ $G.FlowerGroup.Queue.prototype._render = function()
     }
     
     // all flowers out of screen
-    if(n === m)
+    if(n > 0 && n === m)
     {
       f = firstF, firstF = nF;
       
@@ -1287,6 +1384,61 @@ else
   };
 }  
 
+$G.Controller.Touch = function()
+{
+  this.touchStartY;
+  this.lastTouchX;
+  
+  var self = this;
+  
+  this._onTouchStartBind = function(e) { self._onTouchStart(e); };
+  this._onTouchEndBind = function(e) { self._onTouchEnd(e); };
+};
+
+$G.Controller.Touch.prototype._activete = function()
+{
+  this.touchStartY = this.lastTouchX = null;
+  $d.ontouchstart = this._onTouchStartBind;
+  $d.ontouchend = this._onTouchEndBind;
+};
+$G.Controller.Touch.prototype._deactivete = function()
+{
+  $d.ontouchstart = $d.ontouchend = null;
+};
+
+$G.Controller.Touch.prototype._process = function()
+{
+  var diff = this.lastTouchX - $G.ship.x;
+  
+  if(diff >= 15)
+    $G.ship._moveRight();
+  else if(diff <= -15)
+    $G.ship._moveLeft();
+};
+
+$G.Controller.Touch.prototype._onTouchStart = function(e)
+{
+  if(e == null)
+    e = event;
+  
+  this.touchStartY = e.changedTouches[0].clientY;
+};
+
+$G.Controller.Touch.prototype._onTouchEnd = function(e)
+{
+  if(e == null)
+    e = event;
+  
+  // click
+  if(Math.abs(this.touchStartY - e.changedTouches[0].clientY) < 10)
+    $G.ship._fireBullet();
+  // gesture finger up/down
+  else
+    $G.ship._togglePause();
+
+  return false;
+};
+
 if("textContent" in document.documentElement)
 {
   $G._setNodeText = function(v, text)
@@ -1402,6 +1554,7 @@ $G._onWindowResize = function(e)
 {
   $G.wWidth = $w.innerWidth || $d.documentElement.clientWidth || $d.body.clientWidth;
   $G.wHeight = $w.innerHeight || $d.documentElement.clientHeight || $d.body.clientHeight;
+  $G.ship.y = $G.wHeight - 20;
 };
 
 $G._main=function()
