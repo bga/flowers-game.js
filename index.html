@@ -62,7 +62,7 @@
 
   <div id="bullets"></div>
 
-  <div id="ship" style="bottom:0px;"></div>
+  <div id="ship" style="bottom:0px;"><div id="ship-saw" style="display:none;"></div></div>
 
   <div id="petals"></div>
 
@@ -104,13 +104,21 @@
               <p>right click - toggle pause/menu</p>
             </div>
           </li>
+          <li class="touch" controller="$G.Controller.Touch">
+            <h3 onclick="return $G._setController.call(this);">Touch</h3>
+            <div>
+              <p>touch - fire</p>
+              <p>touch gorisontal position - position to move ship</p>
+              <p>gesture up/down - pause/menu</p>
+            </div>
+          </li>
         </ul>  
       </li>
       <li>
         <h2>Credits</h2>
         <p>gfx/music/original idea owned by <a href="http://www.gamedesign.jp/">gamedesign</a></p>
         <p>js port, gameplay improvement by <a href="https://twitter.com/bga_">bga</a></p>
-        <p><a href="#">source code(github, new BSD license)</a></p>
+        <p><a href="http://github.com/bga/flowers-game.js/tree/gh-pages">source code(github, new BSD license)</a></p>
       </li>
     </ul>
   </div>
