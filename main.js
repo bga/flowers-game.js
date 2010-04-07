@@ -1429,6 +1429,8 @@ $G.Controller.Touch.prototype._onTouchEnd = function(e)
   if(e == null)
     e = event;
   
+  this.lastTouchX = e.changedTouches[0].clientX;
+  
   // click
   if(Math.abs(this.touchStartY - e.changedTouches[0].clientY) < 10)
     $G.ship._fireBullet();
