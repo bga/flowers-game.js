@@ -35,40 +35,40 @@ var difMap=
     'flowers-swing':
     {
       minCreateInterval: 2*33,
-      dMinCreateInterval: -0.1,
-      mMinCreateInterval: 10,
+      dMinCreateInterval: -1/60,
+      mMinCreateInterval: 0.5*33,
 
       maxCreateInterval: 33*4,
-      dMaxCreateInterval: -0.1,
-      mMaxCreateInterval: 33*2
+      dMaxCreateInterval: -1/30,
+      mMaxCreateInterval: 33
     },
     'flowers-meteorite':
     {
       minCreateInterval: 2*33,
-      dMinCreateInterval: -0.1,
-      mMinCreateInterval: 10,
+      dMinCreateInterval: -1/60,
+      mMinCreateInterval: 0.5*33,
 
       maxCreateInterval: 33*4,
-      dMaxCreateInterval: -0.1,
-      mMaxCreateInterval: 33*2
+      dMaxCreateInterval: -1/30,
+      mMaxCreateInterval: 33
     },
     'flowers-queue':
     {
       minQueueLen: 3,
-      dMinQueueLen: 0.1,
-      mMinQueueLen: 6,
+      dMinQueueLen: 1/100,
+      mMinQueueLen: 13,
       
       maxQueueLen: 10,
-      dMaxQueueLen: 0.1,
+      dMaxQueueLen: 1/100,
       mMaxQueueLen: 20,
 
       minCreateInterval: 2*33,
-      dMinCreateInterval: -0.1,
-      mMinCreateInterval: 10,
+      dMinCreateInterval: -1/60,
+      mMinCreateInterval: 0.5*33,
 
       maxCreateInterval: 33*4,
-      dMaxCreateInterval: -0.1,
-      mMaxCreateInterval: 33*2
+      dMaxCreateInterval: -1/30,
+      mMaxCreateInterval: 33
     }
   },
   'normal':
