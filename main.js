@@ -216,6 +216,8 @@ $G.Ship.prototype._initGame = function(dif)
   
   this.__pauseModeOff();
   this._enablePause();
+
+  this.__passiveModeOn();
 };
 
 $G.Ship.prototype._kill = function()
@@ -1422,6 +1424,8 @@ $G.Controller.Touch.prototype._onTouchStart = function(e)
     e = event;
   
   this.touchStartY = e.changedTouches[0].clientY;
+
+  return false;
 };
 
 $G.Controller.Touch.prototype._onTouchEnd = function(e)
@@ -1557,12 +1561,11 @@ $G._onWindowResize = function(e)
   $G.wWidth = $w.innerWidth || $d.documentElement.clientWidth || $d.body.clientWidth;
   $G.wHeight = $w.innerHeight || $d.documentElement.clientHeight || $d.body.clientHeight;
   $G.ship.y = $G.wHeight - 20;
+  console.log($G.wWidth, $G.wHeight);
 };
 
 $G._main=function()
 {
-  ($w.onresize = $G._onWindowResize)();
-  
   $G.controller = new $G.Controller.Kbd();
   $G.controller._activete();
   $G.controller.name = '$G.Controller.Kbd';
@@ -1577,6 +1580,8 @@ $G._main=function()
 
   $G._newGame('easy');
   $G.ship._togglePause();
+  
+  ($w.onresize = $G._onWindowResize)();
   
   _gameThread();
 }  
