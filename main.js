@@ -572,6 +572,22 @@ $G.Petals.prototype._removePetals = function(p)
 };
 $G.Petals.prototype._addFlower = function(f)
 {
+  /*
+  var hitAudio = $d.getElementById('audio-hit');
+  
+  if(!hitAudio.currentTime > 0)
+  {  
+    hitAudio.play();
+  }  
+  else
+  {
+    var clone = $d.body.appendChild(hitAudio.cloneNode(true));
+    
+    clone.onplaycomplete = function(e){ this.parentNode.removeChild(this); };
+    clone.play();
+    //hitAudio.currentTime = 0;
+  }
+  */
   ++$G.score;
   
   $G.bonuses._createBonus(f.d.x, f.d.y);
@@ -1561,7 +1577,7 @@ $G._onWindowResize = function(e)
   $G.wWidth = $w.innerWidth || $d.documentElement.clientWidth || $d.body.clientWidth;
   $G.wHeight = $w.innerHeight || $d.documentElement.clientHeight || $d.body.clientHeight;
   $G.ship.y = $G.wHeight - 20;
-  console.log($G.wWidth, $G.wHeight);
+  //console.log($G.wWidth, $G.wHeight);
 };
 
 $G._main=function()
@@ -1571,6 +1587,9 @@ $G._main=function()
   $G.controller.name = '$G.Controller.Kbd';
   
   $G.ship = new $G.Ship();
+
+  ($w.onresize = $G._onWindowResize)();
+
   $G.flowerGroups = new $G.FlowerGroups();
   $G.bonuses = new $G.Bonuses();
   
@@ -1580,8 +1599,6 @@ $G._main=function()
 
   $G._newGame('easy');
   $G.ship._togglePause();
-  
-  ($w.onresize = $G._onWindowResize)();
   
   _gameThread();
 }  
