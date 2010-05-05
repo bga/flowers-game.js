@@ -4,9 +4,9 @@ var difMap=
   {
     'ship':
     {
-      maxAModeTime: 10*33,
-      maxSawTime: 10*33,
-      maxSawFlowersCount: 20
+      maxAModeTime: 20*33,
+      maxSawTime: 20*33,
+      maxSawFlowersCount: 30
     },
     'bonuses':
     {
@@ -75,142 +75,142 @@ var difMap=
   {
     'ship':
     {
-      maxAModeTime: 10*33,
-      maxSawTime: 10*33,
-      maxSawFlowersCount: 20
+      maxAModeTime: 15*33,
+      maxSawTime: 15*33,
+      maxSawFlowersCount: 25
     },
     'bonuses':
     {
-      bonusChanse: 0.001
+      bonusChanse: 1/150
     },
     'flowers-pulse':
     {
-      minCreateInterval: 10,
-      dMinCreateInterval: 0,
-      mMinCreateInterval: 10,
+      minCreateInterval: 1.5*33,
+      dMinCreateInterval: -1/50,
+      mMinCreateInterval: 0.3*33,
 
-      maxCreateInterval: 50,
-      dMaxCreateInterval: 0,
-      mMaxCreateInterval: 50
+      maxCreateInterval: 3*33,
+      dMaxCreateInterval: -1/25,
+      mMaxCreateInterval: 0.8*33
     },
     'flowers-fall':
     {
-      minCreateInterval: 10,
-      dMinCreateInterval: 0,
-      mMinCreateInterval: 10,
+      minCreateInterval: 1.5*33,
+      dMinCreateInterval: -1/50,
+      mMinCreateInterval: 0.3*33,
 
-      maxCreateInterval: 50,
-      dMaxCreateInterval: 0,
-      mMaxCreateInterval: 50
+      maxCreateInterval: 3*33,
+      dMaxCreateInterval: -1/25,
+      mMaxCreateInterval: 0.8*33
     },
     'flowers-swing':
     {
-      minCreateInterval: 100,
-      dMinCreateInterval: 0,
-      mMinCreateInterval: 100,
+      minCreateInterval: 1.5*33,
+      dMinCreateInterval: -1/50,
+      mMinCreateInterval: 0.3*33,
 
-      maxCreateInterval: 500,
-      dMaxCreateInterval: 0,
-      mMaxCreateInterval: 500
+      maxCreateInterval: 3*33,
+      dMaxCreateInterval: -1/25,
+      mMaxCreateInterval: 0.8*33
     },
     'flowers-meteorite':
     {
-      minCreateInterval: 100,
-      dMinCreateInterval: 0,
-      mMinCreateInterval: 100,
+      minCreateInterval: 1.5*33,
+      dMinCreateInterval: -1/50,
+      mMinCreateInterval: 0.3*33,
 
-      maxCreateInterval: 500,
-      dMaxCreateInterval: 0,
-      mMaxCreateInterval: 500
+      maxCreateInterval: 3*33,
+      dMaxCreateInterval: -1/25,
+      mMaxCreateInterval: 0.8*33
     },
     'flowers-queue':
     {
-      minQueueLen: 3,
-      dMinQueueLen: 0,
-      mMinQueueLen: 3,
+      minQueueLen: 5,
+      dMinQueueLen: 1/75,
+      mMinQueueLen: 16,
       
-      maxQueueLen: 10,
-      dMaxQueueLen: 0,
-      mMaxQueueLen: 10,
+      maxQueueLen: 12,
+      dMaxQueueLen: 1/60,
+      mMaxQueueLen: 22,
 
-      minCreateInterval: 10,
-      dMinCreateInterval: 0,
-      mMinCreateInterval: 10,
-      
-      maxCreateInterval: 50,
-      dMaxCreateInterval: 0,
-      mMaxCreateInterval: 50
+      minCreateInterval: 1.5*33,
+      dMinCreateInterval: -1/50,
+      mMinCreateInterval: 0.3*33,
+
+      maxCreateInterval: 3*33,
+      dMaxCreateInterval: -1/25,
+      mMaxCreateInterval: 0.8*33
     }
   },
   'hard':
   {
     'ship':
     {
-      maxAModeTime: 10*33,
-      maxSawTime: 10*33,
+      maxAModeTime: 12*33,
+      maxSawTime: 12*33,
       maxSawFlowersCount: 20
     },
     'bonuses':
     {
-      bonusChanse: 0.001
+      bonusChanse: 1/200
     },
     'flowers-pulse':
     {
-      minCreateInterval: 10,
-      dMinCreateInterval: 0,
-      mMinCreateInterval: 10,
+      minCreateInterval: 1.2*33,
+      dMinCreateInterval: -1/40,
+      mMinCreateInterval: 0.2*33,
 
-      maxCreateInterval: 50,
-      dMaxCreateInterval: 0,
-      mMaxCreateInterval: 50
+      maxCreateInterval: 2.5*33,
+      dMaxCreateInterval: -1/20,
+      mMaxCreateInterval: 0.6*33
     },
     'flowers-fall':
     {
-      minCreateInterval: 10,
-      dMinCreateInterval: 0,
-      mMinCreateInterval: 10,
+      minCreateInterval: 1.2*33,
+      dMinCreateInterval: -1/40,
+      mMinCreateInterval: 0.2*33,
 
-      maxCreateInterval: 50,
-      dMaxCreateInterval: 0,
-      mMaxCreateInterval: 50
+      maxCreateInterval: 2.5*33,
+      dMaxCreateInterval: -1/20,
+      mMaxCreateInterval: 0.6*33
     },
     'flowers-swing':
     {
-      minCreateInterval: 100,
-      dMinCreateInterval: 0,
-      mMinCreateInterval: 100,
+      minCreateInterval: 1.2*33,
+      dMinCreateInterval: -1/40,
+      mMinCreateInterval: 0.2*33,
 
-      maxCreateInterval: 500,
-      dMaxCreateInterval: 0,
-      mMaxCreateInterval: 500
+      maxCreateInterval: 2.5*33,
+      dMaxCreateInterval: -1/20,
+      mMaxCreateInterval: 0.6*33
     },
     'flowers-meteorite':
     {
-      minCreateInterval: 100,
-      dMinCreateInterval: 0,
-      mMinCreateInterval: 100,
+      minCreateInterval: 1.2*33,
+      dMinCreateInterval: -1/40,
+      mMinCreateInterval: 0.2*33,
 
-      maxCreateInterval: 500,
-      dMaxCreateInterval: 0,
-      mMaxCreateInterval: 500
+      maxCreateInterval: 2.5*33,
+      dMaxCreateInterval: -1/20,
+      mMaxCreateInterval: 0.6*33
     },
     'flowers-queue':
     {
-      minQueueLen: 3,
-      dMinQueueLen: 0,
-      mMinQueueLen: 3,
+      minQueueLen: 6,
+      dMinQueueLen: 1/60,
+      mMinQueueLen: 20,
       
-      maxQueueLen: 10,
-      dMaxQueueLen: 0,
-      mMaxQueueLen: 10,
+      maxQueueLen: 14,
+      dMaxQueueLen: 1/45,
+      mMaxQueueLen: 30,
 
-      minCreateInterval: 10,
-      dMinCreateInterval: 0,
-      mMinCreateInterval: 10,
-      
-      maxCreateInterval: 50,
-      dMaxCreateInterval: 0,
-      mMaxCreateInterval: 50
+      minCreateInterval: 1.2*33,
+      dMinCreateInterval: -1/40,
+      mMinCreateInterval: 0.2*33,
+
+      maxCreateInterval: 2.5*33,
+      dMaxCreateInterval: -1/20,
+      mMaxCreateInterval: 0.6*33
     }
   },
   'insane':
@@ -219,69 +219,69 @@ var difMap=
     {
       maxAModeTime: 10*33,
       maxSawTime: 10*33,
-      maxSawFlowersCount: 20
+      maxSawFlowersCount: 15
     },
     'bonuses':
     {
-      bonusChanse: 0.001
+      bonusChanse: 1/250
     },
     'flowers-pulse':
     {
-      minCreateInterval: 15,
-      dMinCreateInterval: 1/40,
-      mMinCreateInterval: 5,
-      
-      maxCreateInterval: 60,
-      dMaxCreateInterval: 1/20,
-      mMaxCreateInterval: 30
+      minCreateInterval: 1*33,
+      dMinCreateInterval: -1/30,
+      mMinCreateInterval: 0.2*33,
+
+      maxCreateInterval: 2*33,
+      dMaxCreateInterval: -1/15,
+      mMaxCreateInterval: 0.4*33
     },
     'flowers-fall':
     {
-      minCreateInterval: 15,
-      dMinCreateInterval: 1/40,
-      mMinCreateInterval: 5,
-      
-      maxCreateInterval: 60,
-      dMaxCreateInterval: 1/20,
-      mMaxCreateInterval: 30
+      minCreateInterval: 1*33,
+      dMinCreateInterval: -1/30,
+      mMinCreateInterval: 0.2*33,
+
+      maxCreateInterval: 2*33,
+      dMaxCreateInterval: -1/15,
+      mMaxCreateInterval: 0.4*33
     },
     'flowers-swing':
     {
-      minCreateInterval: 15,
-      dMinCreateInterval: 1/40,
-      mMinCreateInterval: 5,
-      
-      maxCreateInterval: 60,
-      dMaxCreateInterval: 1/20,
-      mMaxCreateInterval: 30
+      minCreateInterval: 1*33,
+      dMinCreateInterval: -1/30,
+      mMinCreateInterval: 0.2*33,
+
+      maxCreateInterval: 2*33,
+      dMaxCreateInterval: -1/15,
+      mMaxCreateInterval: 0.4*33
     },
     'flowers-meteorite':
     {
-      minCreateInterval: 15,
-      dMinCreateInterval: 1/40,
-      mMinCreateInterval: 5,
-      
-      maxCreateInterval: 60,
-      dMaxCreateInterval: 1/20,
-      mMaxCreateInterval: 30
+      minCreateInterval: 1*33,
+      dMinCreateInterval: -1/30,
+      mMinCreateInterval: 0.2*33,
+
+      maxCreateInterval: 2*33,
+      dMaxCreateInterval: -1/15,
+      mMaxCreateInterval: 0.4*33
     },
     'flowers-queue':
     {
-      minQueueLen: 5,
-      dMinQueueLen: 1/40,
-      mMinQueueLen: 10,
+      minQueueLen: 8,
+      dMinQueueLen: 1/50,
+      mMinQueueLen: 25,
       
-      maxQueueLen: 15,
-      dMaxQueueLen: 1/20,
-      mMaxQueueLen: 25,
+      maxQueueLen: 16,
+      dMaxQueueLen: 1/35,
+      mMaxQueueLen: 35,
 
-      minCreateInterval: 15,
-      dMinCreateInterval: 1/40,
-      mMinCreateInterval: 5,
-      
-      maxCreateInterval: 60,
-      dMaxCreateInterval: 1/20,
-      mMaxCreateInterval: 30
+      minCreateInterval: 1*33,
+      dMinCreateInterval: -1/30,
+      mMinCreateInterval: 0.2*33,
+
+      maxCreateInterval: 2*33,
+      dMaxCreateInterval: -1/15,
+      mMaxCreateInterval: 0.4*33
     }
   }
 };
