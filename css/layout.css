@@ -1,4 +1,36 @@
-html,body
+/**
+  @file
+  @author  Fyodorov "bga" Alexander <bga.email@gmail.com>
+ 
+  @section LICENSE
+ 
+  Copyright (c) 2009-2010, Fyodorov "Bga" Alexander <bga.email@gmail.com>
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+      * Redistributions of source code must retain the above copyright
+        notice, this list of conditions and the following disclaimer.
+      * Redistributions in binary form must reproduce the above copyright
+        notice, this list of conditions and the following disclaimer in the
+        documentation and/or other materials provided with the distribution.
+      * The name of the developer may not be used to endorse or promote
+        products derived from this software without specific prior
+        written permission.
+
+  THIS SOFTWARE IS PROVIDED BY FYODOROV "BGA" ALEXANDER "AS IS" AND ANY EXPRESS OR
+  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+  IN NO EVENT SHALL FYODOROV "BGA" ALEXANDER BE LIABLE FOR ANY DIRECT, INDIRECT,
+  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+html, body
 {
   overflow:hidden;
   width:100%;
@@ -231,13 +263,13 @@ body
   background:url(../i/grass_br.gif) 0px 0px repeat-y;
 }
 
-#menu
+.menu
 {
   position:absolute;
   left:50%;
   top:50%;
-  width:400px;
-  margin-left: -200px;
+  width:300px;
+  margin-left: -150px;
   height:400px;
   margin-top: -200px;
   color:white;
@@ -249,30 +281,43 @@ body
   background: transparent url(../i/non_rgba_back_menu_back.png) repeat; /* fallback for non rgba browsers */
   background: rgba(0, 0, 255, 0.5) none;
 }
-#menu h1
-{
-  text-align:center;
-  font-size:200%;
-}
-#menu h2
+.menu h1
 {
   text-align:center;
   font-size:150%;
 }
-#menu h3
+.menu h2
 {
   text-align:center;
-  font-size:125%;
+  font-size:130%;
+}
+.menu h3
+{
+  text-align:center;
+  font-size:110%;
 }
 
-#menu p
+.menu p
 {
   margin:0px;
 }
-#menu a
+.menu a
 {
   color:red;
 }
+
+button
+{
+  margin:1px;
+  background:white;
+  color:black;
+  -webkit-border-radius:2px;
+  -moz-border-radius:2px;
+  border-radius:2px;
+  border:0px transparent solid;
+}
+
+
 #menu > ul
 {
   padding:0px;
@@ -287,15 +332,11 @@ body
 {
   text-align:center;
 }
-#menu .new_game button
+#menu .hiscores
 {
-  margin:1px;
-  background:white;
-  color:black;
-  -webkit-border-radius:2px;
-  -moz-border-radius:2px;
-  border-radius:2px;
-  border:0px transparent solid;
+  position:absolute;
+  right: 5px;
+  top: 5px;
 }
 
 ul.tabs
@@ -343,3 +384,113 @@ ul.tabs > li.active > div
 {
   display: block;
 }
+
+.ui-slider
+{
+  height:10px;
+  
+  border-radius:5px;  
+  -moz-border-radius:5px;  
+  -webkit-border-radius:5px;
+  border:1px white solid;
+  position: relative;
+}
+
+.ui-slider-handle
+{
+  height: 20px;
+  width: 34px;
+  margin-left: -17px;
+
+  border-radius: 10px;  
+  -moz-border-radius: 10px;  
+  -webkit-border-radius: 10px;
+  border: 1px white solid;
+  background: white;
+  color: black !important;
+  
+  position: absolute;
+  left: 0px;
+  top: -5px;
+  
+  display: block;
+  text-decoration: none;
+  line-height: 20px;
+  border: 0px transparent none !important;
+}
+.ui-slider-handle:focus
+{
+  border: 0px transparent none !important;
+  outline: 0px transparent none !important;
+}
+
+div.slyder.sound
+{
+  width: 100px;
+  /* display:inline !important; */
+  display:inline-block;
+}
+
+iframe
+{
+  border: none;
+}
+
+#iframeMenu
+{
+  padding: 5px;
+  width:290px;
+  height:390px;
+}
+#iframeMenu .back
+{
+  
+}
+#iframeMenu iframe
+{
+  margin-top: 20px;
+  width: 290px;
+  height: 390px;
+}
+
+input[type='text']
+{
+  border: 1px white solid;
+  background: transparent;
+  color: white;
+}
+input[type='text']:focus
+{
+  border: 1px white solid;
+  outline: none;
+}
+
+#scoreSubmitDialog
+{
+  text-align: center;
+  padding: 10px;
+  width: 280px;
+  height: 380px;
+  line-height: 2em;
+}
+#scoreSubmitDialog label
+{
+  float:left;
+}
+#scoreSubmitDialog div
+{
+  overflow:hidden;
+  text-align:right;
+}
+#scoreSubmitDialog input
+{
+  width: 95%;
+}
+#scoreSubmitDialog button
+{
+  margin-top: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+
