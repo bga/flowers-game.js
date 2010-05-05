@@ -32,7 +32,8 @@
 
 $jb.Loader._scope().
 _require("$jb/$G.Function.js").
-_require("_3rdParty/jquery-1.3.2.min.js", true).
+//_require("_3rdParty/jquery-1.3.2.min.js", true).
+_require("http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js", true).
 //_require("_3rdParty/jquery-ui-1.7.2.custom.min.js", true).
 //_require("css/jquery-ui-1.7.2.custom.css", true).
 //_require("$jb/$jb.Preprocessor.js").
