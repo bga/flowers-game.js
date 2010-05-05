@@ -30,40 +30,75 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-var $G = this, $w = window, $d = document;
+$jb.Loader._scope().
+_require("$jb/$G.Function.js").
+_require("_3rdParty/jquery-1.3.2.min.js", true).
+//_require("_3rdParty/jquery-ui-1.7.2.custom.min.js", true).
+//_require("css/jquery-ui-1.7.2.custom.css", true).
+//_require("$jb/$jb.Preprocessor.js").
+//_require("/p/jbasis/test/_js/base.js").
+_completed(function(){
 
-$G.wWidth, $G.wHeight;
+jQuery.noConflict();
 
-$G.controller;
+var 
+  $A = $G.$A, 
+  $jb = $G.$jb, 
+  $w = $G.$w, 
+  $d = $G.$d, 
+  _dom = $jb._dom = jQuery
+  ;
 
-$G.ship;
-$G.bullets;
-$G.petals;
-$G.flowerGroups;
-$G.grass;
+//$A.serverUrl = 'server/hiscore.php'
+$A.serverUrl = 'http://nomorerats.byethost8.com/p/flowers-game.js/hiscore/hiscore.php';
 
-$G._null = function()
+$A.__playSound = function(id)
+{
+  var audio = $d.getElementById(id);
+  
+  if(audio.currentTime > 0)
+  {
+    audio.pause();
+    audio.currentTime = 0.0;
+  }
+  
+  audio.play();
+};
+
+$A._playSound = $jb._null;
+//$A._playSound = $A.__playSound;
+
+$A._setSoundVolume = function(vol)
+{
+  if(vol === 0)
+    return $A._playSound = $jb._null;
+  
+  $A._playSound = $A.__playSound;
+  
+  var as = $d.getElementsByTagName('audio'), i = as.length;
+  
+  vol *= 0.01;
+  
+  while(i--)
+    as[i].volume = vol;
+};
+
+$A.Unit = function()
 {
 
 };
 
-$G.Unit = function()
-{
-
-};
-
-
-$G.Bullets = function()
+$A.Bullets = function()
 {
   this.sprites = $d.getElementById("bullets");
 };
 
-$G.Bullets.prototype._initGame = function(dif)
+$A.Bullets.prototype._initGame = function(dif)
 {
   this.sprites.innerHTML = '';
 };
 
-$G.Bullets.prototype._createBullet=function(x, y, dx, dy)
+$A.Bullets.prototype._createBullet=function(x, y, dx, dy)
 {
   var b = $d.createElement("div"), st, d;
   
@@ -77,15 +112,15 @@ $G.Bullets.prototype._createBullet=function(x, y, dx, dy)
   return this.sprites.appendChild(b);
 };
 
-$G.Bullets.prototype._removeBullet=function(b)
+$A.Bullets.prototype._removeBullet=function(b)
 {
   b.d = null;
   this.sprites.removeChild(b);
 };
 
-$G.Bullets.prototype._render=function()
+$A.Bullets.prototype._render=function()
 {
-  var bs = this.sprites.childNodes, bsLen = bs.length, bi = bsLen, b, x, y, wWidthSub3 = $G.wWidth-3, d, st;
+  var bs = this.sprites.childNodes, bsLen = bs.length, bi = bsLen, b, x, y, wWidthSub3 = $A.wWidth - 3, d, st;
   
   while(bi--)
   {
@@ -105,7 +140,7 @@ $G.Bullets.prototype._render=function()
         x = (d.x += d.dx);
         
         if(x <= 3 || x >= wWidthSub3)
-          this._removeBullet(b)
+          this._removeBullet(b);
         else
           st.left = x - 3 + 'px';
       }  
@@ -113,7 +148,7 @@ $G.Bullets.prototype._render=function()
   }
   
   // collision detection
-  var fgs = $G.flowerGroups.groups, fgi = fgs.length, fg, fs, fi, temp, d;
+  var fgs = $A.flowerGroups.groups, fgi = fgs.length, fg, fs, fi, temp, d;
   
   while(fgi--)
   {
@@ -131,7 +166,7 @@ $G.Bullets.prototype._render=function()
         if((temp = (d = fs[fi].d).x - x)*temp + (temp = d.y - y)*temp < 400)
         {
           fg._killFlower(fs[fi]);
-          this._removeBullet(b)
+          this._removeBullet(b);
           
           break;
         }
@@ -140,13 +175,13 @@ $G.Bullets.prototype._render=function()
   }
 };
 
-$G.Ship=function()
+$A.Ship = function()
 {
   this.sprite = $d.getElementById("ship");
   this.lifeCountEl = $d.getElementById("lifeCount").firstChild;
   this.menuEl = $d.getElementById("menu");
   this.menuTitleEl = $d.getElementById("menu-title").firstChild;
-  this.sawEl = $d.getElementById("ship-saw")
+  this.sawEl = $d.getElementById("ship-saw");
   
   this.lifeCount;
   
@@ -154,7 +189,7 @@ $G.Ship=function()
   this.aModeElTime;
 
   this.maxSawTime;
-  this.maxSawFlowersCount
+  this.maxSawFlowersCount;
   this.sawModeElTime;
   this.sawModeFlowersElCount;
 
@@ -176,13 +211,10 @@ $G.Ship=function()
   
 
   this.restoreSpriteClassThreadId_ = null;
-  
-  var self = this;
-  
-  this.__restoreSpriteClassThreadBind = function(){ self.__restoreSpriteClassThread(); };
+  this.__restoreSpriteClassThread = this.__restoreSpriteClassThread._fBind(this);
 };
 
-$G.Ship.prototype.__stopRestoreClassThread = function()
+$A.Ship.prototype.__stopRestoreClassThread = function()
 {  
   if(this.restoreSpriteClassThreadId_ != null)
   {
@@ -190,13 +222,13 @@ $G.Ship.prototype.__stopRestoreClassThread = function()
     this.restoreSpriteClassThreadId_ = null;
   }
 };
-$G.Ship.prototype.__restoreSpriteClassThread = function()
+$A.Ship.prototype.__restoreSpriteClassThread = function()
 {
   this.sprite.className = this.baseSpriteClass;
   this.restoreSpriteClassThreadId_ = null;
 };
 
-$G.Ship.prototype._initGame = function(dif)
+$A.Ship.prototype._initGame = function(dif)
 {
   var d = dif['ship'];
   
@@ -211,8 +243,8 @@ $G.Ship.prototype._initGame = function(dif)
 
   this.sprite.className = this.baseSpriteClass = '';
 
-  this.y = $G.wHeight - 20;
-  this.sprite.style.left = (this.x = 0.5*$G.wWidth) - 20 + 'px';
+  this.y = $A.wHeight - 20;
+  this.sprite.style.left = (this.x = 0.5*$A.wWidth) - 20 + 'px';
   
   this.__pauseModeOff();
   this._enablePause();
@@ -220,8 +252,10 @@ $G.Ship.prototype._initGame = function(dif)
   this.__passiveModeOn();
 };
 
-$G.Ship.prototype._kill = function()
+$A.Ship.prototype._kill = function()
 {
+  $A._playSound('audio-explode');
+  
   this.__aModeOff();
   this.__sawModeOff();
   
@@ -230,18 +264,18 @@ $G.Ship.prototype._kill = function()
   this.sprite.className = this.baseSpriteClass + " explode";
 
   this.__passiveModeOn();
-  this._render = $G._null;
+  this._render = $jb._null;
 
   if(--this.lifeCount === -1)
   {
     this._disablePause();
     
-    return $G._gameOver();
+    return $A._gameOver();
   }
   
   this.lifeCountEl.data = this.lifeCount;
   
-  this.restoreSpriteClassThreadId_ = setTimeout(this.__restoreSpriteClassThreadBind, 3000);
+  this.restoreSpriteClassThreadId_ = setTimeout(this.__restoreSpriteClassThread, 3000);
 
   var self = this;
   
@@ -250,78 +284,86 @@ $G.Ship.prototype._kill = function()
     {
       self.sprite.style.bottom = '-52px';
       self.__sawModeOn();
-      self._render = self.__renderWakeUp;
+      
+      if(!self.isPause)
+        self._render = self.__renderWakeUp;
+      else
+        self._render = $jb._null;
     },
     3000
   );
 };
 
-$G.Ship.prototype.__fireBullet = function()
+$A.Ship.prototype.__fireBullet = function()
 {
+  $A._playSound('audio-fire');
+  
   // center
-  bullets._createBullet(this.x, $G.wHeight - 40 - 6, 0, -20);
+  $A.bullets._createBullet(this.x, $A.wHeight - 40 - 6, 0, -20);
   
   if(this.restoreSpriteClassThreadId_ == null)
   {
     this.sprite.className += " fire";
-    this.restoreSpriteClassThreadId_ = setTimeout(this.__restoreSpriteClassThreadBind, 100);
+    this.restoreSpriteClassThreadId_ = setTimeout(this.__restoreSpriteClassThread, 100);
   }
 };
 
-$G.Ship.prototype.__fireBulletA = function()
+$A.Ship.prototype.__fireBulletA = function()
 {
+  $A._playSound('audio-fire');
   // center
-  $G.bullets._createBullet(this.x, $G.wHeight - 40 - 6, 0, -20);
+  $A.bullets._createBullet(this.x, $A.wHeight - 40 - 6, 0, -20);
   
   // left
-  $G.bullets._createBullet(this.x - 3, $G.wHeight - 40 - 6, -8, -18);
+  $A.bullets._createBullet(this.x - 3, $A.wHeight - 40 - 6, -8, -18);
 
   // right
-  $G.bullets._createBullet(this.x + 3, $G.wHeight - 40 - 6, +8, -18);
+  $A.bullets._createBullet(this.x + 3, $A.wHeight - 40 - 6, +8, -18);
   
   if(this.restoreSpriteClassThreadId_ == null)
   {
     this.sprite.className += " fire";
-    this.restoreSpriteClassThreadId_ = setTimeout(this.__restoreSpriteClassThreadBind, 100);
+    this.restoreSpriteClassThreadId_ = setTimeout(this.__restoreSpriteClassThread, 100);
   }
 };
 
-$G.Ship.prototype.__pauseModeOn = function()
+$A.Ship.prototype.__pauseModeOn = function()
 {  
   this.isPause = true;
-  this.menuTitleEl.data = $G.gameDifName + " :: Pause";
+  this.menuTitleEl.data = $A.gameDifName + " :: Pause";
   this.menuEl.style.display = "";
   this._render = this.__renderSleep;
   this.__passiveModeOn();
 };
-$G.Ship.prototype.__pauseModeOff = function()
+$A.Ship.prototype.__pauseModeOff = function()
 {  
   this.isPause = false;
   this.menuEl.style.display = 'none';
   this.sprite.style.bottom = '-52px';
+  _dom('#soundLvl a').blur();
   this._render = this.__renderWakeUp;
 };
-$G.Ship.prototype.__togglePause = function()
+$A.Ship.prototype.__togglePause = function()
 {
   if(this.isPause = !this.isPause)
     this.__pauseModeOn();
   else
     this.__pauseModeOff();
 };
-$G.Ship.prototype._disablePause = function()
+$A.Ship.prototype._disablePause = function()
 {
-  this._togglePause = $G._null;
+  this._togglePause = $jb._null;
 };
-$G.Ship.prototype._enablePause = function()
+$A.Ship.prototype._enablePause = function()
 {
   this._togglePause = this.__togglePause;
 };
 
-$G.Ship.prototype.__passiveModeOn = function()
+$A.Ship.prototype.__passiveModeOn = function()
 {
-  this._moveLeft = this._moveRight = this._fireBullet = this._sawModeOn = this._aModeOn = this._addLife = $G._null;
+  this._moveLeft = this._moveRight = this._fireBullet = this._sawModeOn = this._aModeOn = this._addLife = $jb._null;
 };
-$G.Ship.prototype.__passiveModeOff = function()
+$A.Ship.prototype.__passiveModeOff = function()
 {
   this._render = (this.sawModeFlowersElCount > 0) ? this.__renderSaw : this.__render;
   this._fireBullet = (this.aModeElTime > 0) ? this.__fireBulletA : this.__fireBullet;
@@ -334,7 +376,7 @@ $G.Ship.prototype.__passiveModeOff = function()
   this._moveRight= this.__moveRight;
 };
 
-$G.Ship.prototype.__aModeOn = function()
+$A.Ship.prototype.__aModeOn = function()
 {
   this.aModeElTime = this.maxAModeTime;
 
@@ -343,7 +385,7 @@ $G.Ship.prototype.__aModeOn = function()
   this.__stopRestoreClassThread();
   this.sprite.className = this.baseSpriteClass = 'a';
 };
-$G.Ship.prototype.__aModeOff = function()
+$A.Ship.prototype.__aModeOff = function()
 {
   this.aModeElTime = 0;
 
@@ -353,7 +395,7 @@ $G.Ship.prototype.__aModeOff = function()
   this.sprite.className = this.baseSpriteClass = '';
 };
 
-$G.Ship.prototype.__sawModeOn = function()
+$A.Ship.prototype.__sawModeOn = function()
 {
   this.sawModeElTime = this.maxSawTime;
   this.sawModeFlowersElCount = this.maxSawFlowersCount;
@@ -361,19 +403,19 @@ $G.Ship.prototype.__sawModeOn = function()
   
   this.sawEl.style.display = '';
 };
-$G.Ship.prototype.__sawModeOff = function()
+$A.Ship.prototype.__sawModeOff = function()
 {
   this.sawModeFlowersElCount = this.sawModeElTime = 0;
   this._render = this.__render;
   this.sawEl.style.display = 'none';
 };
 
-$G.Ship.prototype.__addLife = function()
+$A.Ship.prototype.__addLife = function()
 {
   this.lifeCountEl.data = "" + (++this.lifeCount);
 };
 
-$G.Ship.prototype.__moveLeft = function()
+$A.Ship.prototype.__moveLeft = function()
 {
   var x = this.x - 15;
   
@@ -383,30 +425,30 @@ $G.Ship.prototype.__moveLeft = function()
   if(this.x !== x)
     this.sprite.style.left = (this.x = x)- 20 + 'px';
 };
-$G.Ship.prototype.__moveRight = function()
+$A.Ship.prototype.__moveRight = function()
 {
   var x = this.x + 15;
   
-  if(x >= $G.wWidth - 20)
-    x = $G.wWidth - 20;
+  if(x >= $A.wWidth - 20)
+    x = $A.wWidth - 20;
   
   if(this.x !== x)
     this.sprite.style.left = (this.x = x)- 20 + 'px';
 };
 
-$G.Ship.prototype.__renderSleep=function()
+$A.Ship.prototype.__renderSleep=function()
 {
   var st = this.sprite.style, y = st.bottom.slice(0, -2) - 1;
   
   if(y < -51)
   {
     y = -51;
-    this._render = $G._null;
+    this._render = $jb._null;
   }
 
   st.bottom = y + 'px';
 };
-$G.Ship.prototype.__renderWakeUp = function()
+$A.Ship.prototype.__renderWakeUp = function()
 {
   var st = this.sprite.style, y = +st.bottom.slice(0, -2) + 1;
   
@@ -418,10 +460,10 @@ $G.Ship.prototype.__renderWakeUp = function()
 
   st.bottom = y + 'px';
 };
-$G.Ship.prototype.__render = function()
+$A.Ship.prototype.__render = function()
 {
   // collision detection
-  var fgs = $G.flowerGroups.groups, fgi = fgs.length, fg, fs, fi, temp, d, x = this.x, y = this.y;
+  var fgs = $A.flowerGroups.groups, fgi = fgs.length, fg, fs, fi, temp, d, x = this.x, y = this.y;
   
   ship_cd: while(fgi--)
   {
@@ -443,10 +485,10 @@ $G.Ship.prototype.__render = function()
     this.__aModeOff();
 };
 
-$G.Ship.prototype.__renderSaw = function()
+$A.Ship.prototype.__renderSaw = function()
 {
   // collision detection
-  var fgs = $G.flowerGroups.groups, fgi = fgs.length, fg, fs, fi, temp, d, x = this.x, y = this.y;
+  var fgs = $A.flowerGroups.groups, fgi = fgs.length, fg, fs, fi, temp, d, x = this.x, y = this.y;
   
   ship_cd: while(fgi--)
   {
@@ -474,10 +516,10 @@ $G.Ship.prototype.__renderSaw = function()
 };
 
 
-$G.FlowerGroup={};
+$A.FlowerGroup={};
 
 
-$G.Bonuses = function()
+$A.Bonuses = function()
 {
   this.sprites = $d.getElementById("bonuses");
   
@@ -485,13 +527,13 @@ $G.Bonuses = function()
 
 };
 
-$G.Bonuses.prototype._initGame = function(dif)
+$A.Bonuses.prototype._initGame = function(dif)
 {
   this.sprites.innerHTML = '';
   this.bonusChanse = dif['bonuses'].bonusChanse;
 };
 
-$G.Bonuses.prototype._createBonus = function(x, y)
+$A.Bonuses.prototype._createBonus = function(x, y)
 {
   if(Math.random() > this.bonusChanse)
     return;
@@ -508,22 +550,22 @@ $G.Bonuses.prototype._createBonus = function(x, y)
   
   d = b.d = new Object();
   
-  (st = b.style).left = (d.x = x) - 20 + 'px';
-  st.top = (d.y = y) - 20 + 'px';
+  (st = b.style).left = (d.x = x|0) - 20 + 'px';
+  st.top = (d.y = y|0) - 20 + 'px';
   
   this.sprites.appendChild(b);
 };
 
-$G.Bonuses.prototype._removeBonus = function(b)
+$A.Bonuses.prototype._removeBonus = function(b)
 {
   b.d = null;
   this.sprites.removeChild(b);
 };
 
-$G.Bonuses.prototype._render = function()
+$A.Bonuses.prototype._render = function()
 {
-  var bs=this.sprites.childNodes, bi=bs.length, b, wHeightSub20 = $G.wHeight + 20, d,
-    x = $G.ship.x, y = $G.ship.y,
+  var bs=this.sprites.childNodes, bi=bs.length, b, wHeightSub20 = $A.wHeight + 20, d,
+    x = $A.ship.x, y = $A.ship.y,
     temp;
   
   while(bi--)
@@ -537,16 +579,18 @@ $G.Bonuses.prototype._render = function()
 
     if((temp = d.x - x)*temp + (temp = d.y - y)*temp < 1600)
     {
+      $A._playSound('audio-item');
+      
       switch(b.className)
       {
         case 'p':
-          $G.ship._aModeOn();
+          $A.ship._aModeOn();
           break;
         case 'new_life':
-          $G.ship._addLife();
+          $A.ship._addLife();
           break;
         case 'saw':
-          $G.ship._sawModeOn();
+          $A.ship._sawModeOn();
           break;
       }
 
@@ -555,49 +599,40 @@ $G.Bonuses.prototype._render = function()
   }
 };
 
-$G.Petals = function()
+$A.Petals = function()
 {
   this.sprites = $d.getElementById("petals");
 };
 
-$G.Petals.prototype._initGame = function(dif)
+$A.Petals.prototype._initGame = function(dif)
 {
   this.sprites.innerHTML = '';
 };
 
-$G.Petals.prototype._removePetals = function(p)
+$A.Petals.prototype._removePetals = function(p)
 {
   p.d = null;
   this.sprites.removeChild(p);
 };
-$G.Petals.prototype._addFlower = function(f)
+$A.Petals.prototype._addFlower = function(f)
 {
-  /*
-  var hitAudio = $d.getElementById('audio-hit');
+  $A._playSound('audio-hit');
   
-  if(!hitAudio.currentTime > 0)
-  {  
-    hitAudio.play();
-  }  
-  else
-  {
-    var clone = $d.body.appendChild(hitAudio.cloneNode(true));
-    
-    clone.onplaycomplete = function(e){ this.parentNode.removeChild(this); };
-    clone.play();
-    //hitAudio.currentTime = 0;
-  }
-  */
-  ++$G.score;
+  ++$A.score;
   
-  $G.bonuses._createBonus(f.d.x, f.d.y);
+  $A.bonuses._createBonus(f.d.x, f.d.y);
   
-  f.d.t = 33;
+  var d = f.d;
+  
+  d.t = 33;
+  d.x |= 0;
+  d.y |= 0;
+  
   this.sprites.appendChild(f);
 };
-$G.Petals.prototype._render = function()
+$A.Petals.prototype._render = function()
 {
-  var ps=this.sprites.childNodes, pi=ps.length, p, wHeightSub20 = $G.wHeight + 20, d;
+  var ps=this.sprites.childNodes, pi=ps.length, p, wHeightSub20 = $A.wHeight + 20, d;
   
   while(pi--)
   {
@@ -610,7 +645,7 @@ $G.Petals.prototype._render = function()
   }
 };
 
-$G.FlowerGroup.Pulse = function()
+$A.FlowerGroup.Pulse = function()
 {
   this.sprites = $d.getElementById("flowers-pulse");
   
@@ -625,7 +660,7 @@ $G.FlowerGroup.Pulse = function()
   this.elCreateInterval = 0;
 };
 
-$G.FlowerGroup.Pulse.prototype._initGame = function(dif)
+$A.FlowerGroup.Pulse.prototype._initGame = function(dif)
 {
   this.sprites.innerHTML = ''; 
   
@@ -640,7 +675,7 @@ $G.FlowerGroup.Pulse.prototype._initGame = function(dif)
   this.mMaxCreateInterval = d.mMaxCreateInterval;
 };
 
-$G.FlowerGroup.Pulse.prototype._killFlower = function(f)
+$A.FlowerGroup.Pulse.prototype._killFlower = function(f)
 {
   if(this.minCreateInterval > this.mMinCreateInterval)
     this.minCreateInterval += this.dMinCreateInterval;
@@ -649,22 +684,22 @@ $G.FlowerGroup.Pulse.prototype._killFlower = function(f)
     this.maxCreateInterval += this.dMaxCreateInterval;
 
   f.className = "pulse";
-  $G.petals._addFlower(f);
+  $A.petals._addFlower(f);
 };
-$G.FlowerGroup.Pulse.prototype._removeFlower = function(f)
+$A.FlowerGroup.Pulse.prototype._removeFlower = function(f)
 {
   f.d = null;
   this.sprites.removeChild(f);
 };
-$G.FlowerGroup.Pulse.prototype._createFlower = function()
+$A.FlowerGroup.Pulse.prototype._createFlower = function()
 {
   var f = $d.createElement('div'), d, st;
   
   d = f.d = new Object();
   
-  (st = f.style).left = (d.x = d.x0 = Math.random()*($G.wWidth - 40) + 20) + 'px';
-  st.top = (d.y = -100) + 'px';
-  d.r = 0.15*Math.random()*$G.wWidth + 0.1*$G.wWidth;
+  (st = f.style).left = ((d.x = d.x0 = Math.random()*($A.wWidth - 40) + 20)|0) + 'px';
+  st.top = ((d.y = -100)|0) + 'px';
+  d.r = 0.15*Math.random()*$A.wWidth + 0.1*$A.wWidth;
   d.t = 0;
   d.dt = 0.10*Math.random() + 0.05;
   d.dy = 2*Math.random() + 2;
@@ -672,14 +707,14 @@ $G.FlowerGroup.Pulse.prototype._createFlower = function()
   this.sprites.appendChild(f);
 };
 
-$G.FlowerGroup.Pulse.prototype._render = function()
+$A.FlowerGroup.Pulse.prototype._render = function()
 {
-  var ss = this.sprites.childNodes, i = ss.length, f, wHeightSub20 = $G.wHeight + 20, d, st, _sin = Math.sin;
+  var ss = this.sprites.childNodes, i = ss.length, f, wHeightSub20 = $A.wHeight + 20, d, st, _sin = Math.sin;
   
   while(i--)
   {
     d = (f = ss[i]).d;
-    (st = f.style).left = (d.x = d.r*_sin(d.t += d.dt) + d.x0) - 20 + 'px';
+    (st = f.style).left = ((d.x = d.r*_sin(d.t += d.dt) + d.x0)|0) - 20 + 'px';
     
     if((d.y += d.dy) > wHeightSub20)
       this._removeFlower(f);
@@ -694,7 +729,7 @@ $G.FlowerGroup.Pulse.prototype._render = function()
   this.elCreateInterval = Math.random() * (this.maxCreateInterval - this.minCreateInterval) + this.minCreateInterval;  
 };
 
-$G.FlowerGroup.Swing = function()
+$A.FlowerGroup.Swing = function()
 {
   this.sprites = $d.getElementById("flowers-swing");
   
@@ -709,7 +744,7 @@ $G.FlowerGroup.Swing = function()
   this.elCreateInterval = 0;
 };
 
-$G.FlowerGroup.Swing.prototype._initGame = function(dif)
+$A.FlowerGroup.Swing.prototype._initGame = function(dif)
 {
   this.sprites.innerHTML = ''; 
   
@@ -724,7 +759,7 @@ $G.FlowerGroup.Swing.prototype._initGame = function(dif)
   this.mMaxCreateInterval = d.mMaxCreateInterval;
 };
 
-$G.FlowerGroup.Swing.prototype._killFlower = function(f)
+$A.FlowerGroup.Swing.prototype._killFlower = function(f)
 {
   if(this.minCreateInterval > this.mMinCreateInterval)
     this.minCreateInterval += this.dMinCreateInterval;
@@ -733,9 +768,9 @@ $G.FlowerGroup.Swing.prototype._killFlower = function(f)
     this.maxCreateInterval += this.dMaxCreateInterval;
 
   f.className = "swing";
-  $G.petals._addFlower(f);
+  $A.petals._addFlower(f);
 };
-$G.FlowerGroup.Swing.prototype._removeFlower = function(f)
+$A.FlowerGroup.Swing.prototype._removeFlower = function(f)
 {
   f.d = null;
   this.sprites.removeChild(f);
@@ -746,36 +781,38 @@ $G.FlowerGroup.Swing.prototype._removeFlower = function(f)
     cosA0 = Math.cos(a0), cosA1 = Math.cos(a1), sinA1 = Math.sin(a1),
     dy = Math.sin(a1) - Math.sin(a0), dyMul2 = dy*2,
     dx = Math.cos(a1) + Math.cos(a0),
-    dt = Math.PI/50;
+    dt = Math.PI/50,
+    _sinL = Math.sin, _cosL = Math.cos,
+    piL = Math.PI;
     
   
-  $G.FlowerGroup.Swing.prototype._createFlower = function()
+  $A.FlowerGroup.Swing.prototype._createFlower = function()
   {
     var f = $d.createElement('div'), d, st;
     
     d = f.d = new Object();
     
     d.phase = 0;
-    d.r = 0.25*Math.random()*$G.wWidth + 0.2*$G.wWidth;
+    d.r = 0.25*Math.random()*$A.wWidth + 0.2*$A.wWidth;
     d.t = 0;
     
-    d.x0 = Math.random()*($G.wWidth - 40) + 20;
+    d.x0 = Math.random()*($A.wWidth - 40) + 20;
     d.y0 = -100 - cosA0*d.r;
     
     d.x1 = dx*d.r + d.x0;
-    d.y1 = d.y0 + dy*d.r
+    d.y1 = d.y0 + dy*d.r;
     
     d.dt = 10/d.r;
     
     this.sprites.appendChild(f);
   };
 
-  $G.FlowerGroup.Swing.prototype._render = function()
+  $A.FlowerGroup.Swing.prototype._render = function()
   {
     var ss = this.sprites.childNodes, i = ss.length, f, 
-      wHeightSub20 = $G.wHeight + 20, halfPi = Math.PI, 
+      wHeightSub20 = $A.wHeight + 20, halfPi = piL, 
       d, st,
-      _sin = Math.sin, _cos = Math.cos,
+      _sin = _sinL, _cos = _cosL,
       negHalfDa = -0.5*da, a0PlusHalfDa = a0 + 0.5*da,
       a;
     
@@ -817,12 +854,12 @@ $G.FlowerGroup.Swing.prototype._removeFlower = function(f)
       }
       
       
-      (st = f.style).left = d.x - 20 + 'px';
+      (st = f.style).left = (d.x|0) - 20 + 'px';
       
       if(d.y > wHeightSub20)
         this._removeFlower(f);
       else  
-        st.top = d.y - 20 + 'px';
+        st.top = (d.y|0) - 20 + 'px';
     }
     
     if(--this.elCreateInterval > 0)
@@ -834,7 +871,7 @@ $G.FlowerGroup.Swing.prototype._removeFlower = function(f)
 })();
 
 
-$G.FlowerGroup.Fall = function()
+$A.FlowerGroup.Fall = function()
 {
   this.sprites = $d.getElementById("flowers-fall");
   
@@ -849,7 +886,7 @@ $G.FlowerGroup.Fall = function()
   this.elCreateInterval = 0;
 };
 
-$G.FlowerGroup.Fall.prototype._initGame = function(dif)
+$A.FlowerGroup.Fall.prototype._initGame = function(dif)
 {
   this.sprites.innerHTML = ''; 
   
@@ -864,7 +901,7 @@ $G.FlowerGroup.Fall.prototype._initGame = function(dif)
   this.mMaxCreateInterval = d.mMaxCreateInterval;
 };
 
-$G.FlowerGroup.Fall.prototype._killFlower = function(f)
+$A.FlowerGroup.Fall.prototype._killFlower = function(f)
 {
   if(this.minCreateInterval > this.mMinCreateInterval)
     this.minCreateInterval += this.dMinCreateInterval;
@@ -873,30 +910,30 @@ $G.FlowerGroup.Fall.prototype._killFlower = function(f)
     this.maxCreateInterval += this.dMaxCreateInterval;
 
   f.className = "fall";
-  $G.petals._addFlower(f);
+  $A.petals._addFlower(f);
 };
-$G.FlowerGroup.Fall.prototype._removeFlower = function(f)
+$A.FlowerGroup.Fall.prototype._removeFlower = function(f)
 {
   f.d = null;
   this.sprites.removeChild(f);
 };
-$G.FlowerGroup.Fall.prototype._createFlower = function()
+$A.FlowerGroup.Fall.prototype._createFlower = function()
 {
   var f = $d.createElement('div'), st, d;
   
   d = f.d = new Object();
   
-  (st = f.style).left = (d.x = Math.random()*($G.wWidth - 40) + 20) + 'px';
+  (st = f.style).left = (d.x = Math.random()*($A.wWidth - 40) + 20) + 'px';
   st.top = (d.y = -100) + 'px';
-  d.dy = 0, d.dx = ($G.ship.x > d.x) ? 0.5 : -0.5;
+  d.dy = 0, d.dx = ($A.ship.x > d.x) ? 0.5 : -0.5;
   
   this.sprites.appendChild(f);
 };
 
-$G.FlowerGroup.Fall.prototype._render = function()
+$A.FlowerGroup.Fall.prototype._render = function()
 {
-  var ss = this.sprites.childNodes, i = ss.length, f, wHeightSub20 = $G.wHeight + 20,
-    sx = $G.ship.x , sy = $G.ship.y,
+  var ss = this.sprites.childNodes, i = ss.length, f, wHeightSub20 = $A.wHeight + 20,
+    sx = $A.ship.x , sy = $A.ship.y,
     dx, dy, invLen,
     _sqrt = Math.sqrt,
     st, d;
@@ -908,12 +945,12 @@ $G.FlowerGroup.Fall.prototype._render = function()
     invLen = 0.1/_sqrt(dx*dx + dy*dy);
     d.dx += invLen*dx, d.dy += invLen*dy; + 0.2;
     
-    (st = f.style).left = (d.x += d.dx) - 20 + 'px';
+    (st = f.style).left = ((d.x += d.dx)|0) - 20 + 'px';
     
     if((d.y += d.dy) > wHeightSub20)
       this._removeFlower(f);
     else  
-      st.top = d.y - 20 + 'px';
+      st.top = (d.y|0) - 20 + 'px';
   }
   
   if(--this.elCreateInterval > 0)
@@ -923,7 +960,7 @@ $G.FlowerGroup.Fall.prototype._render = function()
   this.elCreateInterval = Math.random() * (this.maxCreateInterval - this.minCreateInterval) + this.minCreateInterval;  
 };
 
-$G.FlowerGroup.Meteorite = function()
+$A.FlowerGroup.Meteorite = function()
 {
   this.sprites = $d.getElementById("flowers-meteorite");
   
@@ -938,7 +975,7 @@ $G.FlowerGroup.Meteorite = function()
   this.elCreateInterval = 0;
 };
 
-$G.FlowerGroup.Meteorite.prototype._initGame = function(dif)
+$A.FlowerGroup.Meteorite.prototype._initGame = function(dif)
 {
   this.sprites.innerHTML = ''; 
   
@@ -953,7 +990,7 @@ $G.FlowerGroup.Meteorite.prototype._initGame = function(dif)
   this.mMaxCreateInterval = d.mMaxCreateInterval;
 };
 
-$G.FlowerGroup.Meteorite.prototype._killFlower = function(f)
+$A.FlowerGroup.Meteorite.prototype._killFlower = function(f)
 {
   if(this.minCreateInterval > this.mMinCreateInterval)
     this.minCreateInterval += this.dMinCreateInterval;
@@ -962,41 +999,41 @@ $G.FlowerGroup.Meteorite.prototype._killFlower = function(f)
     this.maxCreateInterval += this.dMaxCreateInterval;
 
   f.className = "meteorite";
-  $G.petals._addFlower(f);
+  $A.petals._addFlower(f);
 };
-$G.FlowerGroup.Meteorite.prototype._removeFlower = function(f)
+$A.FlowerGroup.Meteorite.prototype._removeFlower = function(f)
 {
   f.d = null;
   this.sprites.removeChild(f);
 };
-$G.FlowerGroup.Meteorite.prototype._createFlower = function()
+$A.FlowerGroup.Meteorite.prototype._createFlower = function()
 {
   var f = $d.createElement('div'), st, d;
   
   d = f.d = new Object();
   
-  (st = f.style).left = (d.x = Math.random()*($G.wWidth - 40) + 20) + 'px';
+  (st = f.style).left = (d.x = Math.random()*($A.wWidth - 40) + 20) + 'px';
   st.top = (d.y = -100) + 'px';
-  d.dy = Math.random()*30 + 15, d.dx = ($G.ship.x > d.x) ? Math.random()*8 - 4 : -Math.random()*8 - 4;
+  d.dy = Math.random()*30 + 15, d.dx = ($A.ship.x > d.x) ? Math.random()*8 - 4 : -Math.random()*8 - 4;
   
   this.sprites.appendChild(f);
 };
 
-$G.FlowerGroup.Meteorite.prototype._render = function()
+$A.FlowerGroup.Meteorite.prototype._render = function()
 {
-  var ss = this.sprites.childNodes, i = ss.length, f, wHeightSub20 = $G.wHeight + 20,
+  var ss = this.sprites.childNodes, i = ss.length, f, wHeightSub20 = $A.wHeight + 20,
     st, d;
   
   while(i--)
   {
     d = (f = ss[i]).d;
     
-    (st = f.style).left = (d.x += d.dx) - 20 + 'px';
+    (st = f.style).left = ((d.x += d.dx)|0) - 20 + 'px';
     
     if((d.y += d.dy) > wHeightSub20)
       this._removeFlower(f);
     else  
-      st.top = d.y - 20 + 'px';
+      st.top = (d.y|0) - 20 + 'px';
   }
   
   if(--this.elCreateInterval > 0)
@@ -1006,7 +1043,7 @@ $G.FlowerGroup.Meteorite.prototype._render = function()
   this.elCreateInterval = Math.random() * (this.maxCreateInterval - this.minCreateInterval) + this.minCreateInterval;  
 };
 
-$G.FlowerGroup.Queue = function()
+$A.FlowerGroup.Queue = function()
 {
   this.sprites = $d.getElementById("flowers-queue");
   
@@ -1029,7 +1066,7 @@ $G.FlowerGroup.Queue = function()
   this.elCreateInterval = 0;
 };
 
-$G.FlowerGroup.Queue.prototype._initGame = function(dif)
+$A.FlowerGroup.Queue.prototype._initGame = function(dif)
 {
   this.sprites.innerHTML = ''; 
   
@@ -1052,7 +1089,7 @@ $G.FlowerGroup.Queue.prototype._initGame = function(dif)
   this.mMaxCreateInterval = d.mMaxCreateInterval;
 };
 
-$G.FlowerGroup.Queue.prototype._detachFlower = function(f)
+$A.FlowerGroup.Queue.prototype._detachFlower = function(f)
 {
   var d = f.d;
   
@@ -1071,21 +1108,21 @@ $G.FlowerGroup.Queue.prototype._detachFlower = function(f)
     d.firstF.d.lastF = f.previousSibling;
   }  
 };
-$G.FlowerGroup.Queue.prototype._killFlower = function(f)
+$A.FlowerGroup.Queue.prototype._killFlower = function(f)
 {
   this._detachFlower(f);
   f.className = "queue";
-  $G.petals._addFlower(f);
+  $A.petals._addFlower(f);
 };
-$G.FlowerGroup.Queue.prototype._removeFlower = function(f)
+$A.FlowerGroup.Queue.prototype._removeFlower = function(f)
 {
   this._detachFlower(f);
   this.sprites.removeChild(f);
 };
-$G.FlowerGroup.Queue.prototype._createQueue = function()
+$A.FlowerGroup.Queue.prototype._createQueue = function()
 {
   var len = (Math.random()*(this.maxQueueLen - this.minQueueLen) + this.minQueueLen)|0, i = len,
-    x0 = Math.random()*(0.5*$G.wWidth -  40) + 20, x1 = x0 + (0.4*Math.random() + 0.1)*$G.wWidth,
+    x0 = Math.random()*(0.5*$A.wWidth -  40) + 20, x1 = x0 + (0.4*Math.random() + 0.1)*$A.wWidth,
     a0 = Math.random()*Math.PI, a1 = Math.random()*Math.PI,
     dx0 = Math.cos(a0), dy0 = Math.sin(a0), 
     dx1 = Math.cos(a1), dy1 = Math.sin(a1), 
@@ -1112,11 +1149,11 @@ $G.FlowerGroup.Queue.prototype._createQueue = function()
   (d = lastF.d).dx = dx1, d.dy = dy1, d.firstF = firstF; 
 };
 
-$G.FlowerGroup.Queue.prototype._render = function()
+$A.FlowerGroup.Queue.prototype._render = function()
 {
   var sprites = this.sprites,
     firstF = sprites.firstChild, lastF, f, 
-    wHeightSub20 = $G.wHeight + 20,
+    wHeightSub20 = $A.wHeight + 20,
     m, n,
     x, y,
     d , st;
@@ -1125,8 +1162,8 @@ $G.FlowerGroup.Queue.prototype._render = function()
   {
     lastF = firstF.d.lastF;
 
-    (st = firstF.style).left = (x = (d = firstF.d).x += d.dx) - 20 + 'px'; 
-    st.top = (y = d.y += (d.dy += 0.1)) - 20 + 'px'; 
+    (st = firstF.style).left = ((x = (d = firstF.d).x += d.dx)|0) - 20 + 'px'; 
+    st.top = ((y = d.y += (d.dy += 0.1))|0) - 20 + 'px'; 
     
     if(firstF === lastF)
     {
@@ -1143,8 +1180,8 @@ $G.FlowerGroup.Queue.prototype._render = function()
       continue;
     }
     
-    (st = lastF.style).left = ((d = lastF.d).x += d.dx) - 20 + 'px'; 
-    st.top = (d.y += (d.dy += 0.1)) - 20 + 'px'; 
+    (st = lastF.style).left = (((d = lastF.d).x += d.dx)|0) - 20 + 'px'; 
+    st.top = ((d.y += (d.dy += 0.1))|0) - 20 + 'px'; 
     
     f = firstF.nextSibling, nF = f.nextSibling;  
       
@@ -1165,10 +1202,10 @@ $G.FlowerGroup.Queue.prototype._render = function()
     
     while(f !== lastF)
     {
-      (st = f.style).left = ((d = f.d).ox = d.x, x = d.x = 0.5*(x + nF.d.x)) - 20 + 'px';
+      (st = f.style).left = (((d = f.d).ox = d.x, x = d.x = 0.5*(x + nF.d.x))|0) - 20 + 'px';
       d.dx = d.x - d.ox;
       
-      st.top = (d.oy = d.y, y = d.y = 0.5*(y + nF.d.y)) - 20 + 'px';
+      st.top = ((d.oy = d.y, y = d.y = 0.5*(y + nF.d.y))|0) - 20 + 'px';
       d.dy = d.y - d.oy;
       
       ++n;
@@ -1204,7 +1241,7 @@ $G.FlowerGroup.Queue.prototype._render = function()
   this.elCreateInterval = Math.random() * (this.maxCreateInterval - this.minCreateInterval) + this.minCreateInterval;  
 };
 
-$G.Grass = function()
+$A.Grass = function()
 {
   this.tY = this.bY = -100;
   
@@ -1214,7 +1251,7 @@ $G.Grass = function()
   this.brSprite = $d.getElementById("grass-br");
 };
 
-$G.Grass.prototype._render = function()
+$A.Grass.prototype._render = function()
 {
   if((this.tY += 4) < 0)
     this.tY -= 100;
@@ -1231,19 +1268,19 @@ $G.Grass.prototype._render = function()
     "0px " + this.bY + 'px';
 };
 
-$G.FlowerGroups = function()
+$A.FlowerGroups = function()
 {
   this.groups =
   [
-    new FlowerGroup.Pulse(),
-    new FlowerGroup.Fall(),
-    new FlowerGroup.Queue(),
-    new FlowerGroup.Swing(),
-    new FlowerGroup.Meteorite()
+    new $A.FlowerGroup.Pulse(),
+    new $A.FlowerGroup.Fall(),
+    new $A.FlowerGroup.Queue(),
+    new $A.FlowerGroup.Swing(),
+    new $A.FlowerGroup.Meteorite()
   ];
 };
 
-$G.FlowerGroups.prototype._initGame = function(dif)
+$A.FlowerGroups.prototype._initGame = function(dif)
 {
   var gs = this.groups, i = gs.length;
   
@@ -1251,7 +1288,7 @@ $G.FlowerGroups.prototype._initGame = function(dif)
     gs[i]._initGame(dif);
 };
 
-$G.FlowerGroups.prototype._render=function()
+$A.FlowerGroups.prototype._render=function()
 {
   var gs = this.groups, i = gs.length;
   
@@ -1259,282 +1296,222 @@ $G.FlowerGroups.prototype._render=function()
     gs[i]._render();
 };
 
-$G.Controller = {};
+$A.Controller = {};
 
-$G.Controller.Kbd = function()
+$A.Controller.Kbd = function()
 {
   this.isLeftKey;
   this.isRightKey;
   
-  var self = this;
-  
-  this._onKeyDownBind = function(e) { self._onKeyDown(e); };
-  this._onKeyUpBind = function(e) { self._onKeyUp(e); };
+  this._onKeyDown = this._onKeyDown._fBind(this);
+  this._onKeyUp = this._onKeyUp._fBind(this);
 };
 
-$G.Controller.Kbd.prototype._activete = function()
+$A.Controller.Kbd.prototype._activete = function()
 {
   this.isLeftKey = this.isRightKey = false;
-  $d.onkeydown = this._onKeyDownBind;
-  $d.onkeyup = this._onKeyUpBind;
+
+  _dom($d).bind('keydown', this._onKeyDown);
+  _dom($d).bind('keyup', this._onKeyUp);
 };
-$G.Controller.Kbd.prototype._deactivete = function()
+$A.Controller.Kbd.prototype._deactivete = function()
 {
-  $d.onkeyup = $d.onkeydown = null;
+  _dom($d).unbind('keydown', this._onKeyDown);
+  _dom($d).unbind('keyup', this._onKeyUp);
 };
 
-$G.Controller.Kbd.prototype._process = function()
+$A.Controller.Kbd.prototype._process = function()
 {
   if(!(this.isLeftKey + this.isRightKey)&1)
     return;
 
   if(this.isLeftKey)
-    $G.ship._moveLeft();
+    $A.ship._moveLeft();
   else if(this.isRightKey)
-    $G.ship._moveRight();
+    $A.ship._moveRight();
 };
 
-$G.Controller.Kbd.prototype._onKeyDown = function(e)
+$A.Controller.Kbd.prototype._onKeyDown = function(e)
 {
-  if(e == null)
-    e = event;
-  
   switch(e.keyCode)
   {
     case 37: // left
       this.isLeftKey = true;
-      return false;
+      return $A.ship.isPause;
     case 39: // right
       this.isRightKey = true;
-      return false;
+      return $A.ship.isPause;
   }
 };
-$G.Controller.Kbd.prototype._onKeyUp = function(e)
+$A.Controller.Kbd.prototype._onKeyUp = function(e)
 {
-  if(e == null)
-    e = event;
-  
   switch(e.keyCode)
   {
     case 37: // left
       this.isLeftKey = false;
-      return false;
+      return $A.ship.isPause;
     case 39: // right
       this.isRightKey = false;
-      return false;
+      return $A.ship.isPause;
     case 32: // space fire
     case 16: // shift fire too
-      $G.ship._fireBullet();
-      return false;
+    case 13: // enter fire again
+      $A.ship._fireBullet();
+      return $A.ship.isPause;
     case 27: // esc - pause
-      $G.ship._togglePause();
-      return false;
+    case 40: // down - pause
+      $A.ship._togglePause();
+      return $A.ship.isPause;
   }
 };
 
-$G.Controller.Mouse = function()
+$A.Controller.Mouse = function()
 {
   this.mouseX;
   
-  var self = this;
-  
-  this._onMouseMoveBind = function(e) { self._onMouseMove(e); };
-  this._onMouseUpBind = function(e) { self._onMouseUp(e); };
+  this._onMouseMove = this._onMouseMove._fBind(this);
+  this._onMouseUp = this._onMouseUp._fBind(this);
 };
 
-$G.Controller.Mouse.prototype._activete = function()
+$A.Controller.Mouse.prototype._activete = function()
 {
   this.mouseX = null;
-  $d.onmouseup = this._onMouseUpBind;
-  $d.onmousemove = this._onMouseMoveBind;
+  
+  _dom($d).bind('mouseup', this._onMouseUp);
+  _dom($d).bind('mousemove', this._onMouseMove);
 };
-$G.Controller.Mouse.prototype._deactivete = function()
+$A.Controller.Mouse.prototype._deactivete = function()
 {
-  $d.onmouseup = $d.onmousemove = null;
+  _dom($d).unbind('mouseup', this._onMouseUp);
+  _dom($d).unbind('mousemove', this._onMouseMove);
 };
 
-$G.Controller.Mouse.prototype._process = function()
+$A.Controller.Mouse.prototype._process = function()
 {
-  var diff = this.mouseX - $G.ship.x;
+  var diff = this.mouseX - $A.ship.x;
   
   if(diff >= 15)
-    $G.ship._moveRight();
+    $A.ship._moveRight();
   else if(diff <= -15)
-    $G.ship._moveLeft();
+    $A.ship._moveLeft();
 };
 
-$G.Controller.Mouse.prototype._onMouseMove = function(e)
+$A.Controller.Mouse.prototype._onMouseMove = function(e)
 {
-  if(e == null)
-    e = event;
-  
   this.mouseX = e.clientX;
 };
 
 if($d.recalc)
 {
-  $G.Controller.Mouse.prototype._onMouseUp = function(e)
+  $A.Controller.Mouse.prototype._onMouseUp = function(e)
   {
-    if(e == null)
-      e = event;
-    
     if(e.button&1)
-      $G.ship._fireBullet();
+      $A.ship._fireBullet();
     else if(e.button&2)
-      $G.ship._togglePause();
+      $A.ship._togglePause();
 
     return false;
   };
 }
 else
 {
-  $G.Controller.Mouse.prototype._onMouseUp = function(e)
+  $A.Controller.Mouse.prototype._onMouseUp = function(e)
   {
-    if(e == null)
-      e = event;
-    
     if(e.button === 0)
-      $G.ship._fireBullet();
+      $A.ship._fireBullet();
     else if(e.button === 2)
-      $G.ship._togglePause();
+      $A.ship._togglePause();
     
     return false;
   };
 }  
 
-$G.Controller.Touch = function()
+$A.Controller.Touch = function()
 {
   this.touchStartY;
   this.lastTouchX;
   
-  var self = this;
-  
-  this._onTouchStartBind = function(e) { self._onTouchStart(e); };
-  this._onTouchEndBind = function(e) { self._onTouchEnd(e); };
+  this._onTouchStart = this._onTouchStart._fBind(this);
+  this._onTouchEnd = this._onTouchEnd._fBind(this);
 };
 
-$G.Controller.Touch.prototype._activete = function()
+$A.Controller.Touch.prototype._activete = function()
 {
   this.touchStartY = this.lastTouchX = null;
-  $d.ontouchstart = this._onTouchStartBind;
-  $d.ontouchend = this._onTouchEndBind;
+  
+  _dom($d).bind('touchstart', this._onTouchStart);
+  _dom($d).bind('touchend', this._onTouchEnd);
 };
-$G.Controller.Touch.prototype._deactivete = function()
+$A.Controller.Touch.prototype._deactivete = function()
 {
-  $d.ontouchstart = $d.ontouchend = null;
+  _dom($d).unbind('touchstart', this._onTouchStart);
+  _dom($d).unbind('touchend', this._onTouchEnd);
 };
 
-$G.Controller.Touch.prototype._process = function()
+$A.Controller.Touch.prototype._process = function()
 {
-  var diff = this.lastTouchX - $G.ship.x;
+  var diff = this.lastTouchX - $A.ship.x;
   
   if(diff >= 15)
-    $G.ship._moveRight();
+    $A.ship._moveRight();
   else if(diff <= -15)
-    $G.ship._moveLeft();
+    $A.ship._moveLeft();
 };
 
-$G.Controller.Touch.prototype._onTouchStart = function(e)
+$A.Controller.Touch.prototype._onTouchStart = function(e)
 {
-  if(e == null)
-    e = event;
-  
   this.touchStartY = e.changedTouches[0].clientY;
 
   return false;
 };
 
-$G.Controller.Touch.prototype._onTouchEnd = function(e)
+$A.Controller.Touch.prototype._onTouchEnd = function(e)
 {
-  if(e == null)
-    e = event;
-  
   this.lastTouchX = e.changedTouches[0].clientX;
   
   // click
   if(Math.abs(this.touchStartY - e.changedTouches[0].clientY) < 10)
-    $G.ship._fireBullet();
+    $A.ship._fireBullet();
   // gesture finger up/down
   else
-    $G.ship._togglePause();
+    $A.ship._togglePause();
 
   return false;
 };
 
-if("textContent" in document.documentElement)
-{
-  $G._setNodeText = function(v, text)
-  {
-    var f;
-    
-    if((f = v.firstChild) && f.nodeType === 1 && !f.nextSibling)
-      f.data = "" + text;
-    else  
-      v.textContent = "" + text;
-  };
-}
-else if("innerText" in document.documentElement)
-{
-  $G._setNodeText = function(v, text)
-  {
-    var f;
-    
-    if((f = v.firstChild) && f.nodeType === 1 && !f.nextSibling)
-      f.data = "" + text;
-    else  
-      v.innerText = "" + text;
-  };
-}
-else
-{
-  $G._setNodeText = function(v, text)
-  {
-    var f;
-    
-    if((f = v.firstChild) && f.nodeType === 1 && !f.nextSibling)
-    {  
-      f.data = "" + text;
-    }
-    else
-    {
-      v.innerHTML = "";
-      v.appendChild(document.createTextNode(text));
-    }  
-  };
-}  
 
-$G.fpsDelay = 30, $G.fpsLastTime = 0;
-$G.score = 0;
+$A.fpsDelay = 30, $A.fpsLastTime = 0;
+$A.score = 0;
 
-$G._gameThread=function()
+$A._gameThread=function()
 {
   var t0 = +new Date();
   
-  $G.controller._process();
-  $G.ship._render();
-  $G.bullets._render();
-  $G.petals._render();
-  $G.flowerGroups._render();
-  $G.grass._render();
-  $G.bonuses._render();
+  $A.controller._process();
+  $A.ship._render();
+  $A.bullets._render();
+  $A.petals._render();
+  $A.flowerGroups._render();
+  $A.grass._render();
+  $A.bonuses._render();
   
-  var t = +new Date(), epTime = $G.fpsDelay - (t - t0);
+  var t = +new Date(), epTime = $A.fpsDelay - (t - t0);
   
   $d.getElementById("fps").firstChild.data = (1000/(t - t0)).toFixed(2);
-  $d.getElementById("score").firstChild.data = "" + score;
-  //$G.fpsLastTime = t;
+  $d.getElementById("score").firstChild.data = "" + $A.score;
+  //$A.fpsLastTime = t;
   
   if(epTime < 0)
     epTime = 0;
   
-  setTimeout(_gameThread, epTime);
+  setTimeout($A._gameThread, epTime);
 };
 
-$G._setController = function()
+$A._setController = function()
 {
   var li = this.parentNode, name = li.getAttribute('controller');
   
-  if($G.controller.name === name)
+  if($A.controller.name === name)
     return false;
     
   var ul = li.parentNode, lis = ul.childNodes, lii = lis.length;
@@ -1545,62 +1522,157 @@ $G._setController = function()
   lis[lii].className = lis[lii].className.replace(/active/g, '');
   li.className += " active";
   
-  $G.controller._deactivete();
-  $G.controller = new (eval(name));
-  $G.controller._activete();
-  $G.controller.name = name;
+  $A.controller._deactivete();
+  $A.controller = new (eval(name));
+  $A.controller._activete();
+  $A.controller.name = name;
   
   return false;
 };
 
-$G._newGame = function(name)
+$A._newGame = function(name)
 {
   var dif = difMap[name];
   
-  $G.score = 0;
-  $G.gameDifName = name;
-  $G.ship._initGame(dif);
-  $G.bullets._initGame(dif);
-  $G.petals._initGame(dif);
-  $G.flowerGroups._initGame(dif);
-  $G.bonuses._initGame(dif);
+  $A.score = 0;
+  $A.gameDifName = name;
+  $A.ship._initGame(dif);
+  $A.bullets._initGame(dif);
+  $A.petals._initGame(dif);
+  $A.flowerGroups._initGame(dif);
+  $A.bonuses._initGame(dif);
+  
+  $A.gameStartTime = +new Date();
 };
 
-$G._gameOver = function()
+$A._gameOver = function()
 {
-  $d.getElementById('menu-title').firstChild.data = $G.gameDifName + ' :: game over';
-  $d.getElementById('menu').style.display = '';
+  $d.getElementById('menu-title').firstChild.data = $A.gameDifName + ' :: game over';
+  $A._show('scoreSubmitDialog');
 };
 
-$G._onWindowResize = function(e)
+$A._show = function(id)
 {
-  $G.wWidth = $w.innerWidth || $d.documentElement.clientWidth || $d.body.clientWidth;
-  $G.wHeight = $w.innerHeight || $d.documentElement.clientHeight || $d.body.clientHeight;
-  $G.ship.y = $G.wHeight - 20;
-  //console.log($G.wWidth, $G.wHeight);
+  $d.getElementById(id).style.display = '';
+};
+$A._hide = function(id)
+{
+  $d.getElementById(id).style.display = 'none';
 };
 
-$G._main=function()
+$A._submitScore = function()
 {
-  $G.controller = new $G.Controller.Kbd();
-  $G.controller._activete();
-  $G.controller.name = '$G.Controller.Kbd';
+  var iframe = $d.getElementById('iframeMenu-iframe');
   
-  $G.ship = new $G.Ship();
-
-  ($w.onresize = $G._onWindowResize)();
-
-  $G.flowerGroups = new $G.FlowerGroups();
-  $G.bonuses = new $G.Bonuses();
+  iframe.src = $A.serverUrl + 
+    '?nick=' + encodeURIComponent(($d.getElementById('scores-submit-nick').value)) +
+    '&score=' + $A.score +
+    '&dif=' + $A.gameDifName +
+    '&time=' + ((0.001*((new Date()) - $A.gameStartTime))|0) +
+    '&rnd=' + (0.1*Math.random()).toFixed(6).slice(2)
+    ;
   
-  $G.bullets = new $G.Bullets();
-  $G.petals = new $G.Petals();
-  $G.grass = new $G.Grass();
+  $A._hide('scoreSubmitDialog');
+  $A._show('iframeMenu');
+};
 
-  $G._newGame('easy');
-  $G.ship._togglePause();
+$A._showHiScores = function()
+{
+  var iframe = $d.getElementById('iframeMenu-iframe');
   
-  _gameThread();
-}  
+  iframe.src = $A.serverUrl + '?' +
+    '&rnd=' + (0.1*Math.random()).toFixed(6).slice(2)
+    ;
+  
+  $A._hide('menu');
+  $A._show('iframeMenu');
+};
 
-$w.onload=$G._main;
+$A._onWindowResize = function(e)
+{
+  $A.wWidth = $w.innerWidth || $d.documentElement.clientWidth || $d.body.clientWidth;
+  $A.wHeight = $w.innerHeight || $d.documentElement.clientHeight || $d.body.clientHeight;
+  $A.ship.y = $A.wHeight - 20;
+  //console.log($A.wWidth, $A.wHeight);
+};
+
+  $jb.Loader._scope().
+  _require("_3rdParty/jquery-ui-1.7.2.custom.min.js", true).
+  _completed(function(){
+
+  if(!$d.getElementsByTagName('audio')[0].play)
+  {
+    _dom('.sound').hide();
+    $A._playSound = $jb._null;
+  }
+  else
+  {
+    _dom('#soundLvl').slider(
+      {
+        min: 0.0,
+        max: 100.0,
+        value: 50.0,
+        slide: function(e, ui)
+        {
+          _dom(this).find('.ui-slider-handle').text((ui.value === 0) ? 'off' : ui.value + '%');
+        },
+        change: function(e, ui)
+        {
+          $A._setSoundVolume(ui.value);
+        }
+      }
+    );
+    _dom('#soundLvl').find('.ui-slider-handle').text('50%');
+    $A._playSound = $A.__playSound;
+  }
+
+  });
+
+$A._main = function()
+{
+  try
+  {
+    $d.execCommand("BackgroundImageCache", false, true);
+  }
+  catch(err)
+  {
+  
+  }
+  $A._playSound = $jb._null;
+  
+  $A.controller = new $A.Controller.Kbd();
+  $A.controller._activete();
+  $A.controller.name = '$A.Controller.Kbd';
+  
+  $A.ship = new $A.Ship();
+
+  _dom($w).bind('resize', $A._onWindowResize);
+  $A._onWindowResize();
+
+  $A.flowerGroups = new $A.FlowerGroups();
+  $A.bonuses = new $A.Bonuses();
+  
+  $A.bullets = new $A.Bullets();
+  $A.petals = new $A.Petals();
+  $A.grass = new $A.Grass();
+
+  $A._newGame('easy');
+  $A.ship._togglePause();
+  
+  $A._gameThread();
+};  
+
+//_dom($w).bind("load", $A._main);
+if($d.body)
+  $A._main();
+else  
+  _dom($d).ready($A._main);
+
+});
+
+/*
+var Class = function(a, b){ this.a = a; this.b = b; };
+var _create = function(){ var a = arguments; return new (function(){ Class.apply(this, a); }); };
+_create(1, 2);
+jQuery.chapterFlipper = function(){ var a = arguments; return new (function(){ chapterFlipper.apply(this, a); }); };
+*/
