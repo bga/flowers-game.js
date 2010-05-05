@@ -40,8 +40,10 @@
   <meta content="text/html; charset=utf-8" http-equiv="content-type">
   <meta name="keywords" content="flowers, game, js, javascript, arcade, scroller">
   <meta name="description" content="improved javascript port of GameDesign.com flowers arcade">
-  <meta name="viewport" content="width=device-width">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, width=device-width, height=device-height, user-scalable=no" />
   
+  <script type="text/javascript" src="/p/jbasis/src/config.js"></script>
+  <script type="text/javascript" src="/p/jbasis/src/jbasis.js"></script>
   <script type="text/javascript" src="difMap.js"></script>
   <script type="text/javascript" src="main.js"></script>
   <link rel="stylesheet" href="css/layout.css">
@@ -74,30 +76,33 @@
   <div id="score">a<span> pts</span></div>
   <div id="lifeCount">a<span> lifes</span></div>
   
-  <div id="menu">
+  <div id="menu" class="menu">
+    <button class="hiscores" onclick="return $A._showHiScores();">hiscores</button>
     <h1 id="menu-title">Flowers-game.js</h1>
     <ul>
       <li class="new_game">
         <h2>New Game</h2>
-        <button onclick="return $G._newGame('easy');">easy</button> 
-        <button onclick="return $G._newGame('normal');">normal</button> 
-        <button onclick="return $G._newGame('hard');">hard</button> 
-        <button onclick="return $G._newGame('insane');">insane</button>
+        <button onclick="return $A._newGame('easy');">easy</button> 
+        <button onclick="return $A._newGame('normal');">normal</button> 
+        <button onclick="return $A._newGame('hard');">hard</button> 
+        <button onclick="return $A._newGame('insane');">insane</button>
       </li>
       <li class="opts">
+        <h2 class="sound">Sound</h2>
+        <div id="soundLvl" class="sound slyder"></div>
         <h2>Controlling</h2>
         <ul class="tabs">
-          <li class="kbd active" controller="$G.Controller.Kbd">
-            <h3 onclick="return $G._setController.call(this);">Keyboard</h3>
+          <li class="kbd active" controller="$A.Controller.Kbd">
+            <h3 onclick="return $A._setController.call(this);">Keyboard</h3>
             <div>
               <p>left - left</p>
               <p>right - right</p>
-              <p>shift or space - shoot</p>
-              <p>esc - toggle pause/menu</p>
+              <p>shift/space/enter - shoot</p>
+              <p>esc/down - toggle pause/menu</p>
             </div>
           </li>
-          <li class="mouse" controller="$G.Controller.Mouse">
-            <h3 onclick="return $G._setController.call(this);">Mouse</h3>
+          <li class="mouse" controller="$A.Controller.Mouse">
+            <h3 onclick="return $A._setController.call(this);">Mouse</h3>
             <div>
               <p>mouse left - left</p>
               <p>mouse right - right</p>
@@ -105,8 +110,8 @@
               <p>right click - toggle pause/menu</p>
             </div>
           </li>
-          <li class="touch" controller="$G.Controller.Touch">
-            <h3 onclick="return $G._setController.call(this);">Touch</h3>
+          <li class="touch" controller="$A.Controller.Touch">
+            <h3 onclick="return $A._setController.call(this);">Touch</h3>
             <div>
               <p>touch - fire</p>
               <p>touched vertical position - position to move ship</p>
@@ -123,10 +128,24 @@
       </li>
     </ul>
   </div>
+  <div id="scoreSubmitDialog" class="menu" style="display: none;">
+    <h2>Share your score</h2>
+    <label>Nick:</label><div><input type="text" id="scores-submit-nick"></div>
+    <p><button onclick="return $A._submitScore();">Ok</button>
+    <button onclick="$A._hide('scoreSubmitDialog'); $A._show('menu');">Cancel</button></p>
+  </div>
+  <div id="iframeMenu" class="menu"  style="display: none;">
+    <button class="back" onclick="$A._hide('iframeMenu'); $A._show('menu');">Back</button>
+    <iframe id="iframeMenu-iframe"></iframe>
+  </div>
 </div>
+
+<audio src="audio/hit.ogg" id="audio-hit" preload="auto"></audio>
+<audio src="audio/fire.ogg" id="audio-fire" preload="auto"></audio>
+<audio src="audio/explode.ogg" id="audio-explode" preload="auto"></audio>
+<audio src="audio/item.wav" id="audio-item" preload="auto"></audio>
+
 <!--
-<audio src="audio/hit.wav" id="audio-hit" preload="auto"></audio>
--->
 <script type="text/javascript">
   var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
   document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js'   type='text/javascript'%3E%3C/script%3E"));
@@ -141,5 +160,6 @@
   {
   }
 </script>
+-->
 </body>
 </html>
