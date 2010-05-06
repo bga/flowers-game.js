@@ -51,7 +51,7 @@ var
   ;
 
 //$A.serverUrl = 'server/hiscore.php'
-$A.serverUrl = 'http://nomorerats.byethost8.com/p/flowers-game.js/hiscore/hiscore.php';
+$A.serverUrl = 'http://nomorerats.byethost8.com/p/flowers-game.js/server/hiscore.php';
 
 $A.__playSound = function(id)
 {
@@ -1598,7 +1598,9 @@ $A._onWindowResize = function(e)
 };
 
   $jb.Loader._scope().
-  _require("_3rdParty/jquery-ui-1.7.2.custom.min.js", true).
+  //_require("_3rdParty/jquery-ui-1.7.2.custom.min.js", true).
+  _require("http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js", true).
+  //_require("http://nomorerats.byethost8.com/p/flowers-game.js/_3rdParty/jquery-ui-1.7.2.custom.min.js", true).
   _completed(function(){
 
   if(!$d.getElementsByTagName('audio')[0].play)
