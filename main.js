@@ -335,6 +335,8 @@ $A.Ship.prototype.__pauseModeOn = function()
   this.menuEl.style.display = "";
   this._render = this.__renderSleep;
   this.__passiveModeOn();
+  
+  this.startPauseTime = +new Date();
 };
 $A.Ship.prototype.__pauseModeOff = function()
 {  
@@ -343,6 +345,8 @@ $A.Ship.prototype.__pauseModeOff = function()
   this.sprite.style.bottom = '-52px';
   _dom('#soundLvl a').blur();
   this._render = this.__renderWakeUp;
+  
+  $A.gameStartTime += new Date() - this.startPauseTime;
 };
 $A.Ship.prototype.__togglePause = function()
 {
