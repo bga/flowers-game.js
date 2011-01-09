@@ -30,23 +30,46 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+/*
 $jb.Loader._scope().
 _require("$jb/$G.Function.js").
-//_require("_3rdParty/jquery-1.3.2.min.js", true).
-_require("http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js", true).
+_require("_3rdParty/jquery-1.3.2.min.js", true).
+//_require("http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js", true).
 //_require("_3rdParty/jquery-ui-1.7.2.custom.min.js", true).
 //_require("css/jquery-ui-1.7.2.custom.css", true).
 //_require("$jb/$jb.Preprocessor.js").
 //_require("/p/jbasis/test/_js/base.js").
-_completed(function(){
+_completed*/
+(function($G, $jb, $A){
+
+Function.prototype._fBind = function(that, args)
+{
+  var _fn = this, _ret;
+  
+  if(that != null)
+  {
+    _ret = (args != null) 
+      ? function(){ return _fn.apply(that, args); }
+      : function(){ return (arguments.length > 0) ? _fn.apply(that, arguments) : _fn.call(that); };
+  }
+  else
+  {
+    _ret = (args != null) 
+      ? function(){ return _fn.apply(this, args); }
+      : function(){ return (arguments.length > 0) ? _fn.apply(this, arguments) : _fn.call(this); };
+  }
+
+  _ret.prototype = _fn.prototype;
+  
+  return _ret;
+};
+
 
 jQuery.noConflict();
 
 var 
-  $A = $G.$A, 
-  $jb = $G.$jb, 
-  $w = $G.$w, 
-  $d = $G.$d, 
+  $w = $G.window, 
+  $d = $G.document, 
   _dom = $jb._dom = jQuery
   ;
 
@@ -57,10 +80,10 @@ $A.__playSound = function(id)
 {
   var audio = $d.getElementById(id);
   
-  if(audio.currentTime > 0)
+  //if(audio.currentTime > 0)
   {
-    audio.pause();
-    audio.currentTime = 0.0;
+    //audio.pause();
+    audio.currentTime = 1e-7; 
   }
   
   audio.play();
@@ -103,7 +126,7 @@ $A.Bullets.prototype._createBullet=function(x, y, dx, dy)
 {
   var b = $d.createElement("div"), st, d;
   
-  d = b.d = new Object();
+  d = b.d = {};
   
   (st = b.style).left = (d.x = x) - 3 +'px';
   st.top = (d.y = y) - 3 + 'px';
@@ -553,7 +576,7 @@ $A.Bonuses.prototype._createBonus = function(x, y)
   else
     b.className = 'saw';
   
-  d = b.d = new Object();
+  d = b.d = {};
   
   (st = b.style).left = (d.x = x|0) - 20 + 'px';
   st.top = (d.y = y|0) - 20 + 'px';
@@ -700,7 +723,7 @@ $A.FlowerGroup.Pulse.prototype._createFlower = function()
 {
   var f = $d.createElement('div'), d, st;
   
-  d = f.d = new Object();
+  d = f.d = {};
   
   (st = f.style).left = ((d.x = d.x0 = Math.random()*($A.wWidth - 40) + 20)|0) + 'px';
   st.top = ((d.y = -100)|0) + 'px';
@@ -795,7 +818,7 @@ $A.FlowerGroup.Swing.prototype._removeFlower = function(f)
   {
     var f = $d.createElement('div'), d, st;
     
-    d = f.d = new Object();
+    d = f.d = {};
     
     d.phase = 0;
     d.r = 0.25*Math.random()*$A.wWidth + 0.2*$A.wWidth;
@@ -926,7 +949,7 @@ $A.FlowerGroup.Fall.prototype._createFlower = function()
 {
   var f = $d.createElement('div'), st, d;
   
-  d = f.d = new Object();
+  d = f.d = {};
   
   (st = f.style).left = (d.x = Math.random()*($A.wWidth - 40) + 20) + 'px';
   st.top = (d.y = -100) + 'px';
@@ -1015,7 +1038,7 @@ $A.FlowerGroup.Meteorite.prototype._createFlower = function()
 {
   var f = $d.createElement('div'), st, d;
   
-  d = f.d = new Object();
+  d = f.d = {};
   
   (st = f.style).left = (d.x = Math.random()*($A.wWidth - 40) + 20) + 'px';
   st.top = (d.y = -100) + 'px';
@@ -1139,7 +1162,7 @@ $A.FlowerGroup.Queue.prototype._createQueue = function()
   {
     f = $d.createElement('div');
     
-    d = f.d = new Object();
+    d = f.d = {};
     
     f.style.left = (d.x = d.ox = (x += xStep)) - 20 + 'px';
     f.style.top = (d.y = d.oy = -100) - 20 + 'px';
@@ -1488,7 +1511,7 @@ $A.Controller.Touch.prototype._onTouchEnd = function(e)
 $A.fpsDelay = 30, $A.fpsLastTime = 0;
 $A.score = 0;
 
-$A._gameThread=function()
+$A._gameThread = function()
 {
   var t0 = +new Date();
   
@@ -1601,11 +1624,13 @@ $A._onWindowResize = function(e)
   //console.log($A.wWidth, $A.wHeight);
 };
 
+_dom($d).ready(function(){  
+  /*
   $jb.Loader._scope().
-  //_require("_3rdParty/jquery-ui-1.7.2.custom.min.js", true).
-  _require("http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js", true).
+  _require("_3rdParty/jquery-ui-1.7.2.custom.min.js", true).
+  //_require("http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js", true).
   //_require("http://nomorerats.byethost8.com/p/flowers-game.js/_3rdParty/jquery-ui-1.7.2.custom.min.js", true).
-  _completed(function(){
+  _completed*/(function(){
 
   if(!$d.getElementsByTagName('audio')[0].play)
   {
@@ -1614,6 +1639,10 @@ $A._onWindowResize = function(e)
   }
   else
   {
+    setTimeout(function()
+    {
+      $A._setSoundVolume(50);
+    }, 100);
     _dom('#soundLvl').slider(
       {
         min: 0.0,
@@ -1633,8 +1662,8 @@ $A._onWindowResize = function(e)
     $A._playSound = $A.__playSound;
   }
 
-  });
-
+  })();
+});
 $A._main = function()
 {
   try
@@ -1675,7 +1704,7 @@ if($d.body)
 else  
   _dom($d).ready($A._main);
 
-});
+})(this, this.$jb = {_null: function(){}}, this.$A = {});
 
 /*
 var Class = function(a, b){ this.a = a; this.b = b; };

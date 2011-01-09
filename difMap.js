@@ -1,4 +1,4 @@
-var difMap=
+this.difMap=
 {
   'easy':
   {
