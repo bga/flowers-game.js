@@ -133,6 +133,14 @@
               <p>gesture up/down - pause/menu</p>
             </div>
           </li>
+          <li class="gamepad" controller="$A.Controller.Gamepad">
+            <h3 onclick="return $A._setController.call(this);">Gamepad</h3>
+            <div>
+              <p>left stick left/right - move</p>
+              <p>select/start - pause/menu</p>
+              <p>other button - fire</p>
+            </div>
+          </li>
         </ul>  
       </li>
       <li>
@@ -160,6 +168,7 @@
 <audio src="audio/explode.ogg" id="audio-explode" preload="auto"></audio>
 <audio src="audio/item.wav" id="audio-item" preload="auto"></audio>
 
+<!--
 <script type="text/javascript">
   var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
   document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js'   type='text/javascript'%3E%3C/script%3E"));
@@ -174,5 +183,6 @@
   {
   }
 </script>
+-->
 </body>
 </html>
