@@ -1751,6 +1751,7 @@ $A._submitScore = function()
 
 $A._showHiScores = function()
 {
+  return;
   var iframe = $d.getElementById('iframeMenu-iframe');
   
   iframe.src = $A.serverUrl + '?' +
