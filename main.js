@@ -42,6 +42,20 @@ _require("_3rdParty/jquery-1.3.2.min.js", true).
 _completed*/
 (function($G, $jb, $A){
 
+if(Math.sign == null) {
+  Math.sign = function(x) {
+    if(x < 0) {
+      return -1
+    }
+    else if(x > 0) {
+      return 1
+    }
+    else {
+      return 0
+    }
+  }
+}
+
 Function.prototype._fBind = function(that, args)
 {
   var _fn = this, _ret;
@@ -80,8 +94,9 @@ $A.__playSound = function(id)
 {
   var audio = $d.getElementById(id);
   
-  //if(audio.currentTime > 0)
+  if(audio.currentTime > 0)
   {
+    //audio.src = audio.src
     //audio.pause();
     audio.currentTime = 1e-7; 
   }
@@ -443,9 +458,12 @@ $A.Ship.prototype.__addLife = function()
   this.lifeCountEl.data = "" + (++this.lifeCount);
 };
 
-$A.Ship.prototype.__moveLeft = function()
+$A.Ship.prototype.__moveLeft = function(diff)
 {
-  var x = this.x - 15;
+  if(diff == null) {
+    diff = 15
+  }
+  var x = this.x - diff;
   
   if(x <= 20)
     x = 20;
@@ -453,9 +471,12 @@ $A.Ship.prototype.__moveLeft = function()
   if(this.x !== x)
     this.sprite.style.left = (this.x = x)- 20 + 'px';
 };
-$A.Ship.prototype.__moveRight = function()
+$A.Ship.prototype.__moveRight = function(diff)
 {
-  var x = this.x + 15;
+  if(diff == null) {
+    diff = 15
+  }
+  var x = this.x + diff;
   
   if(x >= $A.wWidth - 20)
     x = $A.wWidth - 20;
@@ -1508,9 +1529,133 @@ $A.Controller.Touch.prototype._onTouchEnd = function(e)
 };
 
 
+$A.Controller.Gamepad = function()
+{
+  this.isFirePressed
+  this.isPausePressed
+};
+
+$A.Controller.Gamepad.prototype._activete = function()
+{
+  this.isFirePressed = false
+  this.isPausePressed = false
+};
+$A.Controller.Gamepad.prototype._deactivete = function()
+{
+};
+
+$A.Controller.Gamepad.prototype._process = function()
+{
+  //# we assume that axis[0] is movement, any button except select/start are fire, select/start - pause
+  var leftStickXIndex = 0
+  var selectButtonIndex = 8
+  var startButtonIndex = 9
+  var deadZone = 0.1
+  var movement = 0
+  var isFire = false
+  var isPause = false
+  var gamepads = window.navigator.getGamepads()
+  for(var i in gamepads) {
+    if(gamepads.hasOwnProperty(i)) {
+      var gamepad = gamepads[i]
+      if(Math.abs(gamepad.axes[leftStickXIndex]) > deadZone) {
+        if(movement != 0) {
+          //# disallow movements from many gamepads same time
+          movement = NaN
+        }
+        else {
+          movement = gamepad.axes[leftStickXIndex] - Math.sign(gamepad.axes[leftStickXIndex]) * deadZone  
+        }
+      }
+      var isPressedButton = function(index) {
+        var button = gamepad.buttons[index]
+        if(button != null) {
+          if(Object(button) instanceof Number) {
+            return button > 0
+          }
+          else if(button instanceof Object) {
+            return button.pressed == true
+          }
+          //# unknown case
+          else {
+            return false
+          }
+        }
+        else {
+          return false
+        }
+        return gamepad.buttons[index] && gamepad.buttons[index].pressed
+      }
+      if(isPause == false) {
+        isPause = isPressedButton(selectButtonIndex) || isPressedButton(startButtonIndex) 
+      }
+      var j = gamepad.buttons.length; while(j--) {
+        if(j ==  selectButtonIndex || j == startButtonIndex) {
+          
+        }
+        else {
+          if(isFire == false) {
+            isFire = isPressedButton(j)
+          }
+        }
+      }
+    }
+  }
+  
+  
+  if(isPause != this.isPausePressed) {
+    if(isPause) {
+      $A.ship._togglePause();
+    }
+    this.isPausePressed = isPause
+  }
+  else {
+    if(isNaN(movement) == false) {
+      var scaledMovement = movement / (1 - deadZone)
+      var shipSpeed = 15
+      
+      if(scaledMovement >= 0)
+        $A.ship._moveRight(Math.round(shipSpeed * scaledMovement));
+      else
+        $A.ship._moveLeft(Math.abs(Math.round(shipSpeed * scaledMovement)));
+    }
+    
+    if(isFire != this.isFirePressed) {
+      if(isFire) {
+        $A.ship._fireBullet();
+      }
+      this.isFirePressed = isFire
+    }
+  }
+};
+
+/*
+$A.Controller.Gamepad.prototype._onGamepadConnect = function(e)
+{
+  console.log(e.originalEvent.gamepad)
+  var gamepad = e.originalEvent.gamepad
+  this.gamepads[gamepad.id] = gamepad
+
+  return false;
+};
+
+$A.Controller.Gamepad.prototype._onGamepadDisconnect = function(e)
+{
+  delete this[e.gamepad.id]
+
+  return false;
+};
+*/
+
+
 $A.fpsDelay = 30, $A.fpsLastTime = 0;
 $A.score = 0;
 
+var requestAnimationFrame = (window.requestAnimationFrame 
+  || window.webkitRequestAnimationFrame
+  || window.mozRequestAnimationFrame
+  || window.oRequestAnimationFrame
+)
 $A._gameThread = function()
 {
   var t0 = +new Date();
@@ -1525,14 +1670,14 @@ $A._gameThread = function()
   
   var t = +new Date(), epTime = $A.fpsDelay - (t - t0);
   
-  $d.getElementById("fps").firstChild.data = (1000/(t - t0)).toFixed(2);
+  //$d.getElementById("fps").firstChild.data = (1000/(t - t0)).toFixed(2);
   $d.getElementById("score").firstChild.data = "" + $A.score;
   //$A.fpsLastTime = t;
   
   if(epTime < 0)
     epTime = 0;
   
-  setTimeout($A._gameThread, epTime);
+  setTimeout($A._gameThread, epTime)
 };
 
 $A._setController = function()
